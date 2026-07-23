@@ -40,7 +40,29 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://yyc3-agent-builder.vercel.app"),
+  metadataBase: new URL("https://agent.yyc3.vip"),
+  icons: {
+    icon: [
+      { url: "/yyc3/Web%20App/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/yyc3/Web%20App/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [
+      { url: "/yyc3/Web%20App/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "android-chrome-192",
+        url: "/yyc3/Web%20App/android-chrome-192.png",
+        sizes: "192x192",
+      },
+      {
+        rel: "android-chrome-512",
+        url: "/yyc3/Web%20App/android-chrome-512.png",
+        sizes: "512x512",
+      },
+    ],
+  },
+  manifest: "/yyc3/Web%20App/site.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -49,6 +71,14 @@ export const metadata: Metadata = {
     description:
       "YYC³ CloudPivot Intelli-Matrix — Build powerful AI workflows visually with drag-and-drop nodes.",
     siteName: "YYC³ Agent Builder",
+    images: [
+      {
+        url: "/Family-002.png",
+        width: 1200,
+        height: 630,
+        alt: "YYC³ Agent Builder",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -56,6 +86,7 @@ export const metadata: Metadata = {
     description:
       "YYC³ CloudPivot Intelli-Matrix — Build powerful AI workflows visually with drag-and-drop nodes.",
     creator: "@yyc3",
+    images: ["/Family-002.png"],
   },
   robots: {
     index: true,

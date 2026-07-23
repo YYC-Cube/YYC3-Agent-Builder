@@ -1,0 +1,65 @@
+# ============================================================
+# YYC³ Agent Builder — CI Pipeline
+# ============================================================
+# Quality Gate: Lint → TypeScript → Test → Build
+# ============================================================
+
+name: CI — Quality Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "11"
+
+jobs:
+  quality:
+    name: "🔍 Code Quality"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: ESLint
+        run: pnpm lint
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Test coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: __tests__/coverage/
+          retention-days: 7
+
+      - name: Build verification
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
