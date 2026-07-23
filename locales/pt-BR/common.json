@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "Construtor visual de fluxos de trabalho de IA",
+    "description": "Construa fluxos de trabalho de IA poderosos visualmente com arrastar e soltar"
+  },
+  "toolbar": {
+    "run": "Executar fluxo de trabalho", "export": "Exportar código", "import": "Importar",
+    "exportWorkflow": "Exportar", "clear": "Limpar", "addNode": "Adicionar nó", "menu": "Menu"
+  },
+  "nodes": {
+    "start": { "label": "Início", "description": "Ponto de entrada do fluxo de trabalho", "starting": "Iniciando..." },
+    "end": { "label": "Fim", "description": "Saída do fluxo de trabalho" },
+    "prompt": { "label": "Prompt", "description": "Texto ou prompt de entrada", "placeholder": "Digite seu prompt..." },
+    "textModel": { "label": "Modelo de texto", "description": "Gerar texto com LLM", "temperature": "Temperatura:", "maxTokens": "Tokens máx.:", "structured": "Estruturado:", "running": "Executando...", "output": "Saída:" },
+    "imageGeneration": { "label": "Geração de imagens", "description": "Gerar imagens" },
+    "httpRequest": { "label": "Requisição HTTP", "description": "Chamar APIs externas" },
+    "conditional": { "label": "Condicional", "description": "Ramificação baseada em condição", "condition": "Condição:", "evaluating": "Avaliando...", "result": "Resultado:", "true": "✓ VERDADEIRO", "false": "✗ FALSO" },
+    "javascript": { "label": "JavaScript", "description": "Executar código JS personalizado" },
+    "embeddingModel": { "label": "Modelo de embedding", "description": "Vetorização de texto" },
+    "audio": { "label": "Áudio", "description": "Geração de áudio" },
+    "tool": { "label": "Ferramenta", "description": "Ferramenta de função personalizada" },
+    "structuredOutput": { "label": "Saída estruturada", "description": "Saída JSON estruturada" }
+  },
+  "config": {
+    "title": "Configurar", "close": "Fechar",
+    "start": { "hint": "O nó Início marca o ponto de entrada do fluxo de trabalho. Nenhuma configuração necessária." },
+    "end": { "hint": "O nó Fim marca a saída final do fluxo de trabalho. Nenhuma configuração necessária." },
+    "conditional": { "condition": "Condição (JavaScript)", "conditionHint": "Escreva uma expressão JavaScript que avalie como true ou false. Use input1, input2, etc. para referenciar as saídas dos nós conectados." },
+    "httpRequest": { "url": "URL", "urlHint": "Use $input1, $input2, etc. para interpolar valores na URL", "method": "Método", "headers": "Cabeçalhos (JSON)", "body": "Corpo" },
+    "prompt": { "content": "Conteúdo", "contentHint": "Use $input1, $input2, etc. para referenciar as saídas dos nós conectados" },
+    "textModel": { "model": "Modelo", "temperature": "Temperatura", "maxTokens": "Tokens máx.", "structuredOutput": "Saída estruturada", "schemaName": "Nome do esquema", "schema": "Esquema JSON" },
+    "javascript": { "code": "Código", "codeHint": "Acesse as entradas como input1, input2, etc. Use return para retornar um valor." },
+    "imageGeneration": { "model": "Modelo", "aspectRatio": "Proporção de aspecto", "outputFormat": "Formato de saída" },
+    "audio": { "model": "Modelo", "voice": "Voz", "speed": "Velocidade" },
+    "embeddingModel": { "model": "Modelo", "dimensions": "Dimensões" },
+    "tool": { "name": "Nome da ferramenta", "description": "Descrição", "code": "Código" },
+    "structuredOutput": { "schemaName": "Nome do esquema", "mode": "Modo", "schema": "Esquema JSON" }
+  },
+  "execution": {
+    "title": "Execução", "run": "Executar", "running": "Executando...", "completed": "Concluído", "failed": "Falhou",
+    "nodeStart": "iniciado", "nodeComplete": "concluído", "nodeError": "falhou",
+    "noLogs": "Nenhum registro de execução. Clique em Executar para iniciar o fluxo de trabalho.", "finalOutput": "Saída final", "executionLog": "Registro de execução"
+  },
+  "export": {
+    "title": "Exportar código AI SDK", "description": "Copie ou baixe o código gerado para seu fluxo de trabalho de IA",
+    "workflowTab": "Função de fluxo de trabalho", "routeTab": "Manipulador de rota",
+    "workflowDesc": "Função de fluxo de trabalho autônoma", "routeDesc": "Manipulador de rota API Next.js",
+    "copy": "Copiar", "copied": "Copiado!", "download": "Baixar"
+  },
+  "palette": { "title": "Adicionar nó", "search": "Pesquisar nós...", "noResults": "Nenhum nó encontrado", "clickOrDrag": "Clique ou arraste para adicionar" },
+  "error": { "title": "Algo deu errado", "message": "Ocorreu um erro inesperado", "reload": "Recarregar página" },
+  "common": { "loading": "Carregando...", "save": "Salvar", "cancel": "Cancelar", "delete": "Excluir", "edit": "Editar", "confirm": "Confirmar", "yes": "Sim", "no": "Não", "search": "Pesquisar", "settings": "Configurações", "language": "Idioma", "theme": "Tema" }
+}

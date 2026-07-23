@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "ビジュアルAIワークフロービルダー",
+    "description": "ドラッグ＆ドロップで強力なAIワークフローをビジュアルに構築"
+  },
+  "toolbar": {
+    "run": "ワークフローを実行", "export": "コードをエクスポート", "import": "インポート",
+    "exportWorkflow": "エクスポート", "clear": "クリア", "addNode": "ノードを追加", "menu": "メニュー"
+  },
+  "nodes": {
+    "start": { "label": "開始", "description": "ワークフローの開始点", "starting": "開始中..." },
+    "end": { "label": "終了", "description": "ワークフローの出力" },
+    "prompt": { "label": "プロンプト", "description": "テキストまたはプロンプトの入力", "placeholder": "プロンプトを入力..." },
+    "textModel": { "label": "テキストモデル", "description": "LLMでテキストを生成", "temperature": "温度:", "maxTokens": "最大トークン数:", "structured": "構造化:", "running": "実行中...", "output": "出力:" },
+    "imageGeneration": { "label": "画像生成", "description": "画像を生成" },
+    "httpRequest": { "label": "HTTPリクエスト", "description": "外部APIを呼び出し" },
+    "conditional": { "label": "条件分岐", "description": "条件に基づく分岐", "condition": "条件:", "evaluating": "評価中...", "result": "結果:", "true": "✓ 真", "false": "✗ 偽" },
+    "javascript": { "label": "JavaScript", "description": "カスタムJSコードを実行" },
+    "embeddingModel": { "label": "埋め込みモデル", "description": "テキストのベクトル化" },
+    "audio": { "label": "オーディオ", "description": "音声生成" },
+    "tool": { "label": "ツール", "description": "カスタム関数ツール" },
+    "structuredOutput": { "label": "構造化出力", "description": "構造化JSON出力" }
+  },
+  "config": {
+    "title": "設定", "close": "閉じる",
+    "start": { "hint": "開始ノードはワークフローの開始点です。設定は不要です。" },
+    "end": { "hint": "終了ノードはワークフローの最終出力です。設定は不要です。" },
+    "conditional": { "condition": "条件 (JavaScript)", "conditionHint": "true または false に評価される JavaScript 式を記述してください。input1、input2 などで接続ノードの出力を参照できます。" },
+    "httpRequest": { "url": "URL", "urlHint": "$input1、$input2 などでURLに値を挿入", "method": "メソッド", "headers": "ヘッダー (JSON)", "body": "ボディ" },
+    "prompt": { "content": "コンテンツ", "contentHint": "$input1、$input2 などで接続ノードの出力を参照" },
+    "textModel": { "model": "モデル", "temperature": "温度", "maxTokens": "最大トークン数", "structuredOutput": "構造化出力", "schemaName": "スキーマ名", "schema": "JSONスキーマ" },
+    "javascript": { "code": "コード", "codeHint": "input1、input2 などで入力にアクセス。return で値を出力。" },
+    "imageGeneration": { "model": "モデル", "aspectRatio": "アスペクト比", "outputFormat": "出力形式" },
+    "audio": { "model": "モデル", "voice": "音声", "speed": "速度" },
+    "embeddingModel": { "model": "モデル", "dimensions": "次元" },
+    "tool": { "name": "ツール名", "description": "説明", "code": "コード" },
+    "structuredOutput": { "schemaName": "スキーマ名", "mode": "モード", "schema": "JSONスキーマ" }
+  },
+  "execution": {
+    "title": "実行", "run": "実行", "running": "実行中...", "completed": "完了", "failed": "失敗",
+    "nodeStart": "開始", "nodeComplete": "完了", "nodeError": "失敗",
+    "noLogs": "実行ログがまだありません。実行ボタンをクリックしてワークフローを実行してください。", "finalOutput": "最終出力", "executionLog": "実行ログ"
+  },
+  "export": {
+    "title": "AI SDKコードをエクスポート", "description": "AIワークフロー用に生成されたコードをコピーまたはダウンロード",
+    "workflowTab": "ワークフロー関数", "routeTab": "ルートハンドラー",
+    "workflowDesc": "スタンドアロンのワークフロー関数", "routeDesc": "Next.js APIルートハンドラー",
+    "copy": "コピー", "copied": "コピーしました!", "download": "ダウンロード"
+  },
+  "palette": { "title": "ノードを追加", "search": "ノードを検索...", "noResults": "ノードが見つかりません", "clickOrDrag": "クリックまたはドラッグで追加" },
+  "error": { "title": "問題が発生しました", "message": "予期しないエラーが発生しました", "reload": "ページを再読み込み" },
+  "common": { "loading": "読み込み中...", "save": "保存", "cancel": "キャンセル", "delete": "削除", "edit": "編集", "confirm": "確認", "yes": "はい", "no": "いいえ", "search": "検索", "settings": "設定", "language": "言語", "theme": "テーマ" }
+}

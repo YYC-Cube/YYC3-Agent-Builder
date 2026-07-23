@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "Constructor visual de flujos de trabajo de IA",
+    "description": "Construya flujos de trabajo de IA potentes visualmente con arrastrar y soltar"
+  },
+  "toolbar": {
+    "run": "Ejecutar flujo de trabajo", "export": "Exportar código", "import": "Importar",
+    "exportWorkflow": "Exportar", "clear": "Limpiar", "addNode": "Añadir nodo", "menu": "Menú"
+  },
+  "nodes": {
+    "start": { "label": "Inicio", "description": "Punto de entrada del flujo de trabajo", "starting": "Iniciando..." },
+    "end": { "label": "Fin", "description": "Salida del flujo de trabajo" },
+    "prompt": { "label": "Prompt", "description": "Texto o prompt de entrada", "placeholder": "Ingrese su prompt..." },
+    "textModel": { "label": "Modelo de texto", "description": "Generar texto con LLM", "temperature": "Temperatura:", "maxTokens": "Tokens máx.:", "structured": "Estructurado:", "running": "Ejecutando...", "output": "Salida:" },
+    "imageGeneration": { "label": "Generación de imágenes", "description": "Generar imágenes" },
+    "httpRequest": { "label": "Petición HTTP", "description": "Llamar a APIs externas" },
+    "conditional": { "label": "Condicional", "description": "Bifurcación basada en condición", "condition": "Condición:", "evaluating": "Evaluando...", "result": "Resultado:", "true": "✓ VERDADERO", "false": "✗ FALSO" },
+    "javascript": { "label": "JavaScript", "description": "Ejecutar código JS personalizado" },
+    "embeddingModel": { "label": "Modelo de embedding", "description": "Vectorización de texto" },
+    "audio": { "label": "Audio", "description": "Generación de audio" },
+    "tool": { "label": "Herramienta", "description": "Herramienta de función personalizada" },
+    "structuredOutput": { "label": "Salida estructurada", "description": "Salida JSON estructurada" }
+  },
+  "config": {
+    "title": "Configurar", "close": "Cerrar",
+    "start": { "hint": "El nodo Inicio marca el punto de entrada del flujo de trabajo. No necesita configuración." },
+    "end": { "hint": "El nodo Fin marca la salida final del flujo de trabajo. No necesita configuración." },
+    "conditional": { "condition": "Condición (JavaScript)", "conditionHint": "Escriba una expresión JavaScript que evalúe a true o false. Use input1, input2, etc. para referenciar las salidas de los nodos conectados." },
+    "httpRequest": { "url": "URL", "urlHint": "Use $input1, $input2, etc. para interpolar valores en la URL", "method": "Método", "headers": "Encabezados (JSON)", "body": "Cuerpo" },
+    "prompt": { "content": "Contenido", "contentHint": "Use $input1, $input2, etc. para referenciar las salidas de los nodos conectados" },
+    "textModel": { "model": "Modelo", "temperature": "Temperatura", "maxTokens": "Tokens máx.", "structuredOutput": "Salida estructurada", "schemaName": "Nombre del esquema", "schema": "Esquema JSON" },
+    "javascript": { "code": "Código", "codeHint": "Acceda a las entradas como input1, input2, etc. Use return para devolver un valor." },
+    "imageGeneration": { "model": "Modelo", "aspectRatio": "Relación de aspecto", "outputFormat": "Formato de salida" },
+    "audio": { "model": "Modelo", "voice": "Voz", "speed": "Velocidad" },
+    "embeddingModel": { "model": "Modelo", "dimensions": "Dimensiones" },
+    "tool": { "name": "Nombre de la herramienta", "description": "Descripción", "code": "Código" },
+    "structuredOutput": { "schemaName": "Nombre del esquema", "mode": "Modo", "schema": "Esquema JSON" }
+  },
+  "execution": {
+    "title": "Ejecución", "run": "Ejecutar", "running": "Ejecutando...", "completed": "Completado", "failed": "Fallido",
+    "nodeStart": "iniciado", "nodeComplete": "completado", "nodeError": "fallido",
+    "noLogs": "No hay registros de ejecución. Haga clic en Ejecutar para iniciar el flujo de trabajo.", "finalOutput": "Salida final", "executionLog": "Registro de ejecución"
+  },
+  "export": {
+    "title": "Exportar código AI SDK", "description": "Copie o descargue el código generado para su flujo de trabajo de IA",
+    "workflowTab": "Función de flujo de trabajo", "routeTab": "Manejador de ruta",
+    "workflowDesc": "Función de flujo de trabajo independiente", "routeDesc": "Manejador de ruta API Next.js",
+    "copy": "Copiar", "copied": "¡Copiado!", "download": "Descargar"
+  },
+  "palette": { "title": "Añadir nodo", "search": "Buscar nodos...", "noResults": "No se encontraron nodos", "clickOrDrag": "Haga clic o arrastre para añadir" },
+  "error": { "title": "Algo salió mal", "message": "Ocurrió un error inesperado", "reload": "Recargar página" },
+  "common": { "loading": "Cargando...", "save": "Guardar", "cancel": "Cancelar", "delete": "Eliminar", "edit": "Editar", "confirm": "Confirmar", "yes": "Sí", "no": "No", "search": "Buscar", "settings": "Configuración", "language": "Idioma", "theme": "Tema" }
+}

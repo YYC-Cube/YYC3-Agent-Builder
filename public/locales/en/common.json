@@ -1,0 +1,188 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "Visual AI Workflow Builder",
+    "description": "Build powerful AI workflows visually with drag-and-drop nodes"
+  },
+  "toolbar": {
+    "run": "Run Workflow",
+    "export": "Export Code",
+    "import": "Import",
+    "exportWorkflow": "Export",
+    "clear": "Clear",
+    "addNode": "Add Node",
+    "menu": "Menu"
+  },
+  "nodes": {
+    "start": {
+      "label": "Start",
+      "description": "Workflow entry point",
+      "starting": "Starting..."
+    },
+    "end": {
+      "label": "End",
+      "description": "Workflow output"
+    },
+    "prompt": {
+      "label": "Prompt",
+      "description": "Input text or prompt",
+      "placeholder": "Enter your prompt..."
+    },
+    "textModel": {
+      "label": "Text Model",
+      "description": "Generate text with LLM",
+      "temperature": "Temperature:",
+      "maxTokens": "Max Tokens:",
+      "structured": "Structured:",
+      "running": "Running...",
+      "output": "Output:"
+    },
+    "imageGeneration": {
+      "label": "Image Generation",
+      "description": "Generate images"
+    },
+    "httpRequest": {
+      "label": "HTTP Request",
+      "description": "Call external APIs"
+    },
+    "conditional": {
+      "label": "Conditional",
+      "description": "Branch based on condition",
+      "condition": "Condition:",
+      "evaluating": "Evaluating...",
+      "result": "Result:",
+      "true": "✓ TRUE",
+      "false": "✗ FALSE"
+    },
+    "javascript": {
+      "label": "JavaScript",
+      "description": "Execute custom JS code"
+    },
+    "embeddingModel": {
+      "label": "Embedding Model",
+      "description": "Convert text to embeddings"
+    },
+    "audio": {
+      "label": "Audio",
+      "description": "Audio generation"
+    },
+    "tool": {
+      "label": "Tool",
+      "description": "Custom function tool"
+    },
+    "structuredOutput": {
+      "label": "Structured Output",
+      "description": "Structured JSON output"
+    }
+  },
+  "config": {
+    "title": "Configure",
+    "close": "Close",
+    "start": {
+      "hint": "The Start node marks the entry point of your workflow. No configuration needed."
+    },
+    "end": {
+      "hint": "The End node marks the final output of your workflow. No configuration needed."
+    },
+    "conditional": {
+      "condition": "Condition (JavaScript)",
+      "conditionHint": "Write a JavaScript expression that evaluates to true or false. Use input1, input2, etc. to reference connected node outputs."
+    },
+    "httpRequest": {
+      "url": "URL",
+      "urlHint": "Use $input1, $input2, etc. to interpolate values in the URL",
+      "method": "Method",
+      "headers": "Headers (JSON)",
+      "body": "Body"
+    },
+    "prompt": {
+      "content": "Content",
+      "contentHint": "Use $input1, $input2, etc. to reference connected node outputs"
+    },
+    "textModel": {
+      "model": "Model",
+      "temperature": "Temperature",
+      "maxTokens": "Max Tokens",
+      "structuredOutput": "Structured Output",
+      "schemaName": "Schema Name",
+      "schema": "JSON Schema"
+    },
+    "javascript": {
+      "code": "Code",
+      "codeHint": "Access inputs as input1, input2, etc. Use return to output a value."
+    },
+    "imageGeneration": {
+      "model": "Model",
+      "aspectRatio": "Aspect Ratio",
+      "outputFormat": "Output Format"
+    },
+    "audio": {
+      "model": "Model",
+      "voice": "Voice",
+      "speed": "Speed"
+    },
+    "embeddingModel": {
+      "model": "Model",
+      "dimensions": "Dimensions"
+    },
+    "tool": {
+      "name": "Tool Name",
+      "description": "Description",
+      "code": "Code"
+    },
+    "structuredOutput": {
+      "schemaName": "Schema Name",
+      "mode": "Mode",
+      "schema": "JSON Schema"
+    }
+  },
+  "execution": {
+    "title": "Execution",
+    "run": "Execute",
+    "running": "Executing...",
+    "completed": "Completed",
+    "failed": "Failed",
+    "nodeStart": "started",
+    "nodeComplete": "completed",
+    "nodeError": "failed",
+    "noLogs": "No execution logs yet. Click Execute to run the workflow.",
+    "finalOutput": "Final Output",
+    "executionLog": "Execution Log"
+  },
+  "export": {
+    "title": "Export AI SDK Code",
+    "description": "Copy or download the generated code for your AI workflow",
+    "workflowTab": "Workflow Function",
+    "routeTab": "Route Handler",
+    "workflowDesc": "Standalone workflow function",
+    "routeDesc": "Next.js API route handler",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "download": "Download"
+  },
+  "palette": {
+    "title": "Add Node",
+    "search": "Search nodes...",
+    "noResults": "No nodes found",
+    "clickOrDrag": "Click or drag to add"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred",
+    "reload": "Reload Page"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  }
+}

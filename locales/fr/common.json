@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "Constructeur visuel de workflows IA",
+    "description": "Construisez des workflows IA puissants visuellement par glisser-déposer"
+  },
+  "toolbar": {
+    "run": "Exécuter le workflow", "export": "Exporter le code", "import": "Importer",
+    "exportWorkflow": "Exporter", "clear": "Effacer", "addNode": "Ajouter un nœud", "menu": "Menu"
+  },
+  "nodes": {
+    "start": { "label": "Début", "description": "Point d'entrée du workflow", "starting": "Démarrage..." },
+    "end": { "label": "Fin", "description": "Sortie du workflow" },
+    "prompt": { "label": "Prompt", "description": "Texte ou prompt en entrée", "placeholder": "Entrez votre prompt..." },
+    "textModel": { "label": "Modèle de texte", "description": "Générer du texte avec un LLM", "temperature": "Température :", "maxTokens": "Tokens max :", "structured": "Structuré :", "running": "En cours...", "output": "Sortie :" },
+    "imageGeneration": { "label": "Génération d'images", "description": "Générer des images" },
+    "httpRequest": { "label": "Requête HTTP", "description": "Appeler des API externes" },
+    "conditional": { "label": "Condition", "description": "Branche conditionnelle", "condition": "Condition :", "evaluating": "Évaluation...", "result": "Résultat :", "true": "✓ VRAI", "false": "✗ FAUX" },
+    "javascript": { "label": "JavaScript", "description": "Exécuter du code JS personnalisé" },
+    "embeddingModel": { "label": "Modèle d'embedding", "description": "Vectorisation de texte" },
+    "audio": { "label": "Audio", "description": "Génération audio" },
+    "tool": { "label": "Outil", "description": "Outil de fonction personnalisée" },
+    "structuredOutput": { "label": "Sortie structurée", "description": "Sortie JSON structurée" }
+  },
+  "config": {
+    "title": "Configurer", "close": "Fermer",
+    "start": { "hint": "Le nœud Début marque le point d'entrée du workflow. Aucune configuration nécessaire." },
+    "end": { "hint": "Le nœud Fin marque la sortie finale du workflow. Aucune configuration nécessaire." },
+    "conditional": { "condition": "Condition (JavaScript)", "conditionHint": "Écrivez une expression JavaScript qui évalue à true ou false. Utilisez input1, input2, etc. pour référencer les sorties des nœuds connectés." },
+    "httpRequest": { "url": "URL", "urlHint": "Utilisez $input1, $input2, etc. pour interpoler des valeurs dans l'URL", "method": "Méthode", "headers": "En-têtes (JSON)", "body": "Corps" },
+    "prompt": { "content": "Contenu", "contentHint": "Utilisez $input1, $input2, etc. pour référencer les sorties des nœuds connectés" },
+    "textModel": { "model": "Modèle", "temperature": "Température", "maxTokens": "Tokens max", "structuredOutput": "Sortie structurée", "schemaName": "Nom du schéma", "schema": "Schéma JSON" },
+    "javascript": { "code": "Code", "codeHint": "Accédez aux entrées via input1, input2, etc. Utilisez return pour sortir une valeur." },
+    "imageGeneration": { "model": "Modèle", "aspectRatio": "Ratio d'aspect", "outputFormat": "Format de sortie" },
+    "audio": { "model": "Modèle", "voice": "Voix", "speed": "Vitesse" },
+    "embeddingModel": { "model": "Modèle", "dimensions": "Dimensions" },
+    "tool": { "name": "Nom de l'outil", "description": "Description", "code": "Code" },
+    "structuredOutput": { "schemaName": "Nom du schéma", "mode": "Mode", "schema": "Schéma JSON" }
+  },
+  "execution": {
+    "title": "Exécution", "run": "Exécuter", "running": "En cours d'exécution...", "completed": "Terminé", "failed": "Échoué",
+    "nodeStart": "démarré", "nodeComplete": "terminé", "nodeError": "échoué",
+    "noLogs": "Aucun journal d'exécution. Cliquez sur Exécuter pour lancer le workflow.", "finalOutput": "Sortie finale", "executionLog": "Journal d'exécution"
+  },
+  "export": {
+    "title": "Exporter le code AI SDK", "description": "Copiez ou téléchargez le code généré pour votre workflow IA",
+    "workflowTab": "Fonction de workflow", "routeTab": "Gestionnaire de route",
+    "workflowDesc": "Fonction de workflow autonome", "routeDesc": "Gestionnaire de route API Next.js",
+    "copy": "Copier", "copied": "Copié !", "download": "Télécharger"
+  },
+  "palette": { "title": "Ajouter un nœud", "search": "Rechercher des nœuds...", "noResults": "Aucun nœud trouvé", "clickOrDrag": "Cliquez ou glissez pour ajouter" },
+  "error": { "title": "Un problème est survenu", "message": "Une erreur inattendue s'est produite", "reload": "Recharger la page" },
+  "common": { "loading": "Chargement...", "save": "Enregistrer", "cancel": "Annuler", "delete": "Supprimer", "edit": "Modifier", "confirm": "Confirmer", "yes": "Oui", "no": "Non", "search": "Rechercher", "settings": "Paramètres", "language": "Langue", "theme": "Thème" }
+}

@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "أداة بناء سير عمل الذكاء الاصطناعي المرئية",
+    "description": "أنشئ سير عمل ذكاء اصطناعي قويًا بصريًا باستخدام السحب والإفلات"
+  },
+  "toolbar": {
+    "run": "تشغيل سير العمل", "export": "تصدير الكود", "import": "استيراد",
+    "exportWorkflow": "تصدير", "clear": "مسح", "addNode": "إضافة عقدة", "menu": "القائمة"
+  },
+  "nodes": {
+    "start": { "label": "البداية", "description": "نقطة دخول سير العمل", "starting": "جاري البدء..." },
+    "end": { "label": "النهاية", "description": "مخرجات سير العمل" },
+    "prompt": { "label": "الموجه", "description": "نص أو موجه إدخال", "placeholder": "أدخل الموجه الخاص بك..." },
+    "textModel": { "label": "نموذج النص", "description": "إنشاء نص باستخدام LLM", "temperature": "الحرارة:", "maxTokens": "الحد الأقصى للرموز:", "structured": "منظم:", "running": "جاري التشغيل...", "output": "المخرجات:" },
+    "imageGeneration": { "label": "إنشاء الصور", "description": "إنشاء صور" },
+    "httpRequest": { "label": "طلب HTTP", "description": "استدعاء واجهات برمجة خارجية" },
+    "conditional": { "label": "شرطي", "description": "تفرع بناءً على شرط", "condition": "الشرط:", "evaluating": "جاري التقييم...", "result": "النتيجة:", "true": "✓ صحيح", "false": "✗ خاطئ" },
+    "javascript": { "label": "جافاسكريبت", "description": "تنفيذ كود JS مخصص" },
+    "embeddingModel": { "label": "نموذج التضمين", "description": "تحويل النص إلى متجهات" },
+    "audio": { "label": "الصوت", "description": "إنشاء صوت" },
+    "tool": { "label": "الأداة", "description": "أداة دالة مخصصة" },
+    "structuredOutput": { "label": "مخرجات منظمة", "description": "مخرجات JSON منظمة" }
+  },
+  "config": {
+    "title": "تكوين", "close": "إغلاق",
+    "start": { "hint": "تحدد عقدة البداية نقطة الدخول لسير العمل. لا حاجة للتكوين." },
+    "end": { "hint": "تحدد عقدة النهاية المخرج النهائي لسير العمل. لا حاجة للتكوين." },
+    "conditional": { "condition": "الشرط (جافاسكريبت)", "conditionHint": "اكتب تعبير جافاسكريبت يُقيَّم إلى true أو false. استخدم input1، input2، إلخ للإشارة إلى مخرجات العقد المتصلة." },
+    "httpRequest": { "url": "الرابط", "urlHint": "استخدم $input1، $input2، إلخ لإدراج القيم في الرابط", "method": "الطريقة", "headers": "الرؤوس (JSON)", "body": "المحتوى" },
+    "prompt": { "content": "المحتوى", "contentHint": "استخدم $input1، $input2، إلخ للإشارة إلى مخرجات العقد المتصلة" },
+    "textModel": { "model": "النموذج", "temperature": "الحرارة", "maxTokens": "الحد الأقصى للرموز", "structuredOutput": "مخرجات منظمة", "schemaName": "اسم المخطط", "schema": "مخطط JSON" },
+    "javascript": { "code": "الكود", "codeHint": "قم بالوصول إلى المدخلات كـ input1، input2، إلخ. استخدم return لإخراج قيمة." },
+    "imageGeneration": { "model": "النموذج", "aspectRatio": "نسبة العرض إلى الارتفاع", "outputFormat": "تنسيق الإخراج" },
+    "audio": { "model": "النموذج", "voice": "الصوت", "speed": "السرعة" },
+    "embeddingModel": { "model": "النموذج", "dimensions": "الأبعاد" },
+    "tool": { "name": "اسم الأداة", "description": "الوصف", "code": "الكود" },
+    "structuredOutput": { "schemaName": "اسم المخطط", "mode": "الوضع", "schema": "مخطط JSON" }
+  },
+  "execution": {
+    "title": "التنفيذ", "run": "تنفيذ", "running": "جاري التنفيذ...", "completed": "مكتمل", "failed": "فشل",
+    "nodeStart": "بدأ", "nodeComplete": "اكتمل", "nodeError": "فشل",
+    "noLogs": "لا توجد سجلات تنفيذ بعد. انقر على تنفيذ لتشغيل سير العمل.", "finalOutput": "المخرج النهائي", "executionLog": "سجل التنفيذ"
+  },
+  "export": {
+    "title": "تصدير كود AI SDK", "description": "انسخ أو حمّل الكود المُنشأ لسير عمل الذكاء الاصطناعي الخاص بك",
+    "workflowTab": "دالة سير العمل", "routeTab": "معالج المسار",
+    "workflowDesc": "دالة سير عمل مستقلة", "routeDesc": "معالج مسار API Next.js",
+    "copy": "نسخ", "copied": "تم النسخ!", "download": "تحميل"
+  },
+  "palette": { "title": "إضافة عقدة", "search": "البحث عن عقد...", "noResults": "لم يتم العثور على عقد", "clickOrDrag": "انقر أو اسحب للإضافة" },
+  "error": { "title": "حدث خطأ ما", "message": "حدث خطأ غير متوقع", "reload": "إعادة تحميل الصفحة" },
+  "common": { "loading": "جاري التحميل...", "save": "حفظ", "cancel": "إلغاء", "delete": "حذف", "edit": "تعديل", "confirm": "تأكيد", "yes": "نعم", "no": "لا", "search": "بحث", "settings": "الإعدادات", "language": "اللغة", "theme": "المظهر" }
+}

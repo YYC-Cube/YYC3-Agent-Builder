@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "Visueller KI-Workflow-Builder",
+    "description": "Erstellen Sie leistungsstarke KI-Workflows visuell per Drag & Drop"
+  },
+  "toolbar": {
+    "run": "Workflow ausführen", "export": "Code exportieren", "import": "Importieren",
+    "exportWorkflow": "Exportieren", "clear": "Löschen", "addNode": "Knoten hinzufügen", "menu": "Menü"
+  },
+  "nodes": {
+    "start": { "label": "Start", "description": "Workflow-Einstiegspunkt", "starting": "Startet..." },
+    "end": { "label": "Ende", "description": "Workflow-Ausgabe" },
+    "prompt": { "label": "Prompt", "description": "Text oder Prompt eingeben", "placeholder": "Prompt eingeben..." },
+    "textModel": { "label": "Textmodell", "description": "Text mit LLM generieren", "temperature": "Temperatur:", "maxTokens": "Max. Tokens:", "structured": "Strukturiert:", "running": "Läuft...", "output": "Ausgabe:" },
+    "imageGeneration": { "label": "Bildgenerierung", "description": "Bilder generieren" },
+    "httpRequest": { "label": "HTTP-Anfrage", "description": "Externe APIs aufrufen" },
+    "conditional": { "label": "Bedingung", "description": "Bedingte Verzweigung", "condition": "Bedingung:", "evaluating": "Auswertung...", "result": "Ergebnis:", "true": "✓ WAHR", "false": "✗ FALSCH" },
+    "javascript": { "label": "JavaScript", "description": "Benutzerdefinierten JS-Code ausführen" },
+    "embeddingModel": { "label": "Embedding-Modell", "description": "Text-Vektorisierung" },
+    "audio": { "label": "Audio", "description": "Audio-Generierung" },
+    "tool": { "label": "Werkzeug", "description": "Benutzerdefiniertes Funktionswerkzeug" },
+    "structuredOutput": { "label": "Strukturierte Ausgabe", "description": "Strukturierte JSON-Ausgabe" }
+  },
+  "config": {
+    "title": "Konfigurieren", "close": "Schließen",
+    "start": { "hint": "Der Start-Knoten markiert den Einstiegspunkt des Workflows. Keine Konfiguration erforderlich." },
+    "end": { "hint": "Der Ende-Knoten markiert die finale Ausgabe des Workflows. Keine Konfiguration erforderlich." },
+    "conditional": { "condition": "Bedingung (JavaScript)", "conditionHint": "Schreiben Sie einen JavaScript-Ausdruck, der zu true oder false ausgewertet wird. Verwenden Sie input1, input2 usw., um auf verbundene Knotenausgaben zu verweisen." },
+    "httpRequest": { "url": "URL", "urlHint": "Verwenden Sie $input1, $input2 usw., um Werte in die URL einzufügen", "method": "Methode", "headers": "Header (JSON)", "body": "Body" },
+    "prompt": { "content": "Inhalt", "contentHint": "Verwenden Sie $input1, $input2 usw., um auf verbundene Knotenausgaben zu verweisen" },
+    "textModel": { "model": "Modell", "temperature": "Temperatur", "maxTokens": "Max. Tokens", "structuredOutput": "Strukturierte Ausgabe", "schemaName": "Schema-Name", "schema": "JSON-Schema" },
+    "javascript": { "code": "Code", "codeHint": "Greifen Sie über input1, input2 usw. auf Eingaben zu. Verwenden Sie return, um einen Wert auszugeben." },
+    "imageGeneration": { "model": "Modell", "aspectRatio": "Seitenverhältnis", "outputFormat": "Ausgabeformat" },
+    "audio": { "model": "Modell", "voice": "Stimme", "speed": "Geschwindigkeit" },
+    "embeddingModel": { "model": "Modell", "dimensions": "Dimensionen" },
+    "tool": { "name": "Werkzeugname", "description": "Beschreibung", "code": "Code" },
+    "structuredOutput": { "schemaName": "Schema-Name", "mode": "Modus", "schema": "JSON-Schema" }
+  },
+  "execution": {
+    "title": "Ausführung", "run": "Ausführen", "running": "Wird ausgeführt...", "completed": "Abgeschlossen", "failed": "Fehlgeschlagen",
+    "nodeStart": "gestartet", "nodeComplete": "abgeschlossen", "nodeError": "fehlgeschlagen",
+    "noLogs": "Noch keine Ausführungsprotokolle. Klicken Sie auf Ausführen, um den Workflow zu starten.", "finalOutput": "Finale Ausgabe", "executionLog": "Ausführungsprotokoll"
+  },
+  "export": {
+    "title": "AI SDK Code exportieren", "description": "Kopieren oder laden Sie den generierten Code für Ihren KI-Workflow herunter",
+    "workflowTab": "Workflow-Funktion", "routeTab": "Route-Handler",
+    "workflowDesc": "Eigenständige Workflow-Funktion", "routeDesc": "Next.js API Route-Handler",
+    "copy": "Kopieren", "copied": "Kopiert!", "download": "Herunterladen"
+  },
+  "palette": { "title": "Knoten hinzufügen", "search": "Knoten suchen...", "noResults": "Keine Knoten gefunden", "clickOrDrag": "Klicken oder ziehen zum Hinzufügen" },
+  "error": { "title": "Etwas ist schiefgelaufen", "message": "Ein unerwarteter Fehler ist aufgetreten", "reload": "Seite neu laden" },
+  "common": { "loading": "Laden...", "save": "Speichern", "cancel": "Abbrechen", "delete": "Löschen", "edit": "Bearbeiten", "confirm": "Bestätigen", "yes": "Ja", "no": "Nein", "search": "Suchen", "settings": "Einstellungen", "language": "Sprache", "theme": "Design" }
+}

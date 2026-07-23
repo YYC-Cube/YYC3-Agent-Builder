@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "YYC³ Agent Builder",
+    "subtitle": "視覺化 AI 工作流建構器",
+    "description": "透過拖曳節點視覺化建構強大的 AI 工作流"
+  },
+  "toolbar": {
+    "run": "執行工作流",
+    "export": "匯出程式碼",
+    "import": "匯入",
+    "exportWorkflow": "匯出",
+    "clear": "清空",
+    "addNode": "新增節點",
+    "menu": "選單"
+  },
+  "nodes": {
+    "start": { "label": "開始", "description": "工作流入口", "starting": "啟動中..." },
+    "end": { "label": "結束", "description": "工作流輸出" },
+    "prompt": { "label": "提示詞", "description": "輸入文字或提示詞", "placeholder": "輸入提示詞..." },
+    "textModel": { "label": "文字模型", "description": "使用 LLM 生成文字", "temperature": "溫度:", "maxTokens": "最大 Token 數:", "structured": "結構化:", "running": "執行中...", "output": "輸出:" },
+    "imageGeneration": { "label": "圖像生成", "description": "生成圖像" },
+    "httpRequest": { "label": "HTTP 請求", "description": "呼叫外部 API" },
+    "conditional": { "label": "條件分支", "description": "基於條件分支", "condition": "條件:", "evaluating": "評估中...", "result": "結果:", "true": "✓ 是", "false": "✗ 否" },
+    "javascript": { "label": "JavaScript", "description": "執行自訂 JS 程式碼" },
+    "embeddingModel": { "label": "嵌入模型", "description": "文字向量化" },
+    "audio": { "label": "音訊", "description": "音訊生成" },
+    "tool": { "label": "工具", "description": "自訂函式工具" },
+    "structuredOutput": { "label": "結構化輸出", "description": "結構化 JSON 輸出" }
+  },
+  "config": {
+    "title": "設定", "close": "關閉",
+    "start": { "hint": "開始節點標記工作流的入口點。無需設定。" },
+    "end": { "hint": "結束節點標記工作流的最終輸出。無需設定。" },
+    "conditional": { "condition": "條件 (JavaScript)", "conditionHint": "撰寫一個回傳 true 或 false 的 JavaScript 運算式。使用 input1、input2 等引用連接節點的輸出。" },
+    "httpRequest": { "url": "URL", "urlHint": "使用 $input1、$input2 等在 URL 中插入變數值", "method": "方法", "headers": "請求標頭 (JSON)", "body": "請求內容" },
+    "prompt": { "content": "內容", "contentHint": "使用 $input1、$input2 等引用連接節點的輸出" },
+    "textModel": { "model": "模型", "temperature": "溫度", "maxTokens": "最大 Token 數", "structuredOutput": "結構化輸出", "schemaName": "Schema 名稱", "schema": "JSON Schema" },
+    "javascript": { "code": "程式碼", "codeHint": "使用 input1、input2 等存取輸入。使用 return 輸出值。" },
+    "imageGeneration": { "model": "模型", "aspectRatio": "寬高比", "outputFormat": "輸出格式" },
+    "audio": { "model": "模型", "voice": "語音", "speed": "語速" },
+    "embeddingModel": { "model": "模型", "dimensions": "維度" },
+    "tool": { "name": "工具名稱", "description": "描述", "code": "程式碼" },
+    "structuredOutput": { "schemaName": "Schema 名稱", "mode": "模式", "schema": "JSON Schema" }
+  },
+  "execution": {
+    "title": "執行", "run": "執行", "running": "執行中...", "completed": "已完成", "failed": "失敗",
+    "nodeStart": "已啟動", "nodeComplete": "已完成", "nodeError": "失敗",
+    "noLogs": "尚無執行日誌。點擊執行按鈕執行工作流。", "finalOutput": "最終輸出", "executionLog": "執行日誌"
+  },
+  "export": {
+    "title": "匯出 AI SDK 程式碼", "description": "複製或下載為 AI 工作流生成的程式碼",
+    "workflowTab": "工作流函式", "routeTab": "路由處理器",
+    "workflowDesc": "獨立工作流函式", "routeDesc": "Next.js API 路由處理器",
+    "copy": "複製", "copied": "已複製!", "download": "下載"
+  },
+  "palette": { "title": "新增節點", "search": "搜尋節點...", "noResults": "未找到節點", "clickOrDrag": "點擊或拖曳新增" },
+  "error": { "title": "出了點問題", "message": "發生了意外錯誤", "reload": "重新載入頁面" },
+  "common": { "loading": "載入中...", "save": "儲存", "cancel": "取消", "delete": "刪除", "edit": "編輯", "confirm": "確認", "yes": "是", "no": "否", "search": "搜尋", "settings": "設定", "language": "語言", "theme": "主題" }
+}
