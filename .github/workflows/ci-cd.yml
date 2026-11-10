@@ -13,7 +13,8 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "20"
+  # pnpm 11 需 Node ≥22.13（node:sqlite）——旧值 20 致 CI 全红（ERR_UNKNOWN_BUILTIN_MODULE）
+  NODE_VERSION: "22"
   PNPM_VERSION: "11"
 
 jobs:
