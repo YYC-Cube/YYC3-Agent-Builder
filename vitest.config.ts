@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    env: {
+      LOG_LEVEL: "silent",
+    },
     setupFiles: ["./__tests__/setup.ts"],
     include: ["__tests__/**/*.test.{ts,tsx}"],
     coverage: {
@@ -14,6 +17,7 @@ export default defineConfig({
       include: [
         "lib/**/*.{ts,tsx}",
         "components/**/*.{ts,tsx}",
+        "app/api/**/*.ts",
       ],
       exclude: [
         "lib/i18n/index.ts",

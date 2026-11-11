@@ -2,16 +2,19 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useI18n } from "@/lib/i18n"
 import type { Edge, Node } from "@xyflow/react"
 import { CheckCircle, Loader2, Play, X, XCircle } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
+
+const TOKEN_STORAGE_KEY = "yyc3-workflow-token"
 
 type ExecutionResult = {
   nodeId: string
   type: string
-  output: any
+  output: unknown
   error?: string
 }
 
@@ -20,15 +23,22 @@ type ExecutionPanelProps = {
   edges: Edge[]
   onClose: () => void
   onNodeStatusChange?: (nodeId: string, status: "idle" | "running" | "completed" | "error") => void
-  onNodeOutputChange?: (nodeId: string, output: any) => void
+  onNodeOutputChange?: (nodeId: string, output: unknown) => void
+  autoRunToken?: number
 }
 
-export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNodeOutputChange }: ExecutionPanelProps) {
+export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNodeOutputChange, autoRunToken }: ExecutionPanelProps) {
   const { t } = useI18n()
   const [isExecuting, setIsExecuting] = useState(false)
   const [executionLog, setExecutionLog] = useState<ExecutionResult[]>([])
   const [error, setError] = useState<string | null>(null)
   const [currentNodeId, setCurrentNodeId] = useState<string | null>(null)
+  const [accessToken, setAccessToken] = useState(() =>
+    typeof window === "undefined" ? "" : localStorage.getItem(TOKEN_STORAGE_KEY) || "",
+  )
+
+  const handleExecuteRef = useRef<() => Promise<void>>(async () => {})
+  const lastAutoRunToken = useRef(0)
 
   const handleExecute = async () => {
     setIsExecuting(true)
@@ -42,11 +52,26 @@ export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNo
     })
 
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" }
+      const token = accessToken || process.env.NEXT_PUBLIC_WORKFLOW_API_TOKEN
+      if (token) headers["x-workflow-token"] = token
+
       const response = await fetch("/api/execute-workflow", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ nodes, edges }),
       })
+
+      if (!response.ok) {
+        let message = `HTTP ${response.status}`
+        try {
+          const payload = (await response.json()) as { error?: string }
+          if (payload?.error) message = payload.error
+        } catch {
+          // 非 JSON 错误响应时保留 HTTP 状态码信息
+        }
+        throw new Error(message)
+      }
 
       if (!response.body) {
         throw new Error("No response body")
@@ -130,12 +155,23 @@ export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNo
           }
         }
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to execute workflow")
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to execute workflow")
     } finally {
       setIsExecuting(false)
     }
   }
+
+  useEffect(() => {
+    handleExecuteRef.current = handleExecute
+  })
+
+  useEffect(() => {
+    if (autoRunToken && autoRunToken !== lastAutoRunToken.current) {
+      lastAutoRunToken.current = autoRunToken
+      void handleExecuteRef.current()
+    }
+  }, [autoRunToken])
 
   const getNodeLabel = (nodeId: string) => {
     const node = nodes.find((n) => n.id === nodeId)
@@ -191,6 +227,30 @@ export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNo
             </>
           )}
         </Button>
+
+        <div className="mt-3 space-y-1">
+          <label htmlFor="workflow-access-token" className="text-xs text-muted-foreground">
+            Access Token (optional)
+          </label>
+          <Input
+            id="workflow-access-token"
+            type="password"
+            value={accessToken}
+            onChange={(event) => {
+              const next = event.target.value
+              setAccessToken(next)
+              try {
+                if (next) localStorage.setItem(TOKEN_STORAGE_KEY, next)
+                else localStorage.removeItem(TOKEN_STORAGE_KEY)
+              } catch {
+                // localStorage 不可用时仅保留内存态令牌
+              }
+            }}
+            placeholder="Required when WORKFLOW_API_TOKEN is set"
+            className="h-8 text-xs"
+            autoComplete="off"
+          />
+        </div>
 
         {error && (
           <Card className="mt-4 border-destructive bg-destructive/10 p-3">

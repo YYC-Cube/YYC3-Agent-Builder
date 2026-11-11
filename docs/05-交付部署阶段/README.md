@@ -2,9 +2,9 @@
 file: README.md
 description: 05-交付部署阶段 目录文档索引
 author: YanYuCloudCube Team
-version: v1.0.0
+version: v1.1.0
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-11-11
 status: published
 tags: [文档索引,README]
 category: report
@@ -40,9 +40,10 @@ language: zh-CN
 
 | 序号 | 文档名称 | 描述 | 标签 |
 |------|----------|------|------|
-| 1 | [001-交付物清单.md](001-交付物清单.md) | Agent Builder 交付物列表 | [交付],[清单] |
-| 2 | [002-交付验收标准.md](002-交付验收标准.md) | 验收标准定义 | [验收],[标准] |
-| 3 | [001-Vercel部署指南.md](001-Vercel部署指南.md) | Vercel 平台部署配置 | [Vercel],[部署] |
+| 1 | [0501-交付管理/001-交付物清单.md](0501-交付管理/001-交付物清单.md) | Agent Builder 交付物列表 | [交付],[清单] |
+| 2 | [0501-交付管理/002-交付验收标准.md](0501-交付管理/002-交付验收标准.md) | 验收标准定义 | [验收],[标准] |
+| 3 | [0502-部署方案/001-Vercel部署指南.md](0502-部署方案/001-Vercel部署指南.md) | Vercel 平台部署配置 | [Vercel],[部署] |
+| 4 | [0502-部署方案/003-生产部署定案与运行手册.md](0502-部署方案/003-生产部署定案与运行手册.md) | Docker standalone 为主、Vercel 为备的定案与运行手册 | [部署],[运行] |
 
 ---
 

@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.github
+coverage
+__tests__/coverage
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+docs

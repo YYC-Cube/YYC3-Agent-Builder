@@ -2,9 +2,9 @@
 file: README.md
 description: 0502-部署方案 目录文档索引
 author: YanYuCloudCube Team
-version: v1.0.0
+version: v1.1.0
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-11-11
 status: published
 tags: [文档索引,README]
 category: report
@@ -41,6 +41,7 @@ language: zh-CN
 | 序号 | 文档名称 | 描述 | 标签 |
 |------|----------|------|------|
 | 1 | [001-Vercel部署指南.md](001-Vercel部署指南.md) | Vercel 平台部署配置 | [Vercel],[部署] |
+| 2 | [003-生产部署定案与运行手册.md](003-生产部署定案与运行手册.md) | Docker standalone 主方案、反代与 SSE、发布回滚 | [Docker],[部署] |
 
 ---
 

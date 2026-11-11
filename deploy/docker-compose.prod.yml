@@ -1,0 +1,89 @@
+# YYC³ Agent Builder — NAS 生产编排（yyc3-45 / Docker V3）
+# 用法：
+#   cd deploy && cp .env.production.example .env.production && vi .env.production
+#   docker compose -f docker-compose.prod.yml up -d --build
+# 说明：
+#   - app 仅绑定 Tailscale 地址，公网入口由 ECS yyc3-33 反代，不直接暴露
+#   - Redis 与应用同机（V3 NVMe），限流走 REDIS_URL；无需第三方 REST 代理
+#   - 数据库暂未接入代码（阶段 A），DATABASE_URL 先作为部署占位
+
+name: yyc3-agent-builder
+
+services:
+  app:
+    image: yyc3-agent-builder:${APP_VERSION:-0.1.2}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      REDIS_URL: redis://redis:6379/0
+      WORKFLOW_API_TOKEN: ${WORKFLOW_API_TOKEN:?WORKFLOW_API_TOKEN is required}
+    ports:
+      # 只监听 Tailscale 地址；ECS 通过 tailnet 访问
+      - "${TAILSCALE_BIND:-127.0.0.1}:3000:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 25s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+
+  redis:
+    image: redis:7-alpine
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --maxmemory
+      - "512mb"
+      - --maxmemory-policy
+      - noeviction
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+volumes:
+  redis-data:
+    driver: local

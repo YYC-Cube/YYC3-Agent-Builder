@@ -1,4 +1,17 @@
 import "@testing-library/jest-dom/vitest"
+import { ReadableStream } from "node:stream/web"
+import { TextDecoder, TextEncoder } from "node:util"
+
+// jsdom 不提供 Web Streams / TextEncoder，API 路由测试需要这些运行时能力
+if (typeof globalThis.ReadableStream === "undefined") {
+  Object.defineProperty(globalThis, "ReadableStream", { value: ReadableStream, configurable: true })
+}
+if (typeof globalThis.TextEncoder === "undefined") {
+  Object.defineProperty(globalThis, "TextEncoder", { value: TextEncoder, configurable: true })
+}
+if (typeof globalThis.TextDecoder === "undefined") {
+  Object.defineProperty(globalThis, "TextDecoder", { value: TextDecoder, configurable: true })
+}
 
 class ResizeObserverMock {
   observe() {}

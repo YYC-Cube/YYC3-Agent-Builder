@@ -1,9 +1,10 @@
 {
   "project": "YYC³ Agent Builder",
-  "version": "v0.1.0",
-  "generated_at": "2026-05-19T20:45:04.196843",
+  "version": "v0.1.2",
+  "generated_at": "2026-11-11T07:20:00",
   "total_documents": 76,
-  "structure_version": "v3.1.0",
+  "structure_version": "v3.3.0",
+  "note": "total_documents 为 2026-05-19 阶段骨架基线计数；新增文档见 added_documents_2026_11_11，未做全量重算以避免虚假精确。",
   "phases": [
     "00-项目总览索引",
     "01-启动规划阶段",
@@ -15,5 +16,57 @@
     "07-合规安全保障",
     "08-资产知识管理",
     "09-智能演进优化"
-  ]
+  ],
+  "session_directories": [
+    {
+      "name": "agent-builder-hunyuan-20261111",
+      "tutor": "Tencent Hunyuan Hy",
+      "date": "2026-11-11",
+      "files": [
+        "00-项目现状审核报告.md",
+        "01-任务规划与节点目标.md",
+        "02-执行日志与进度跟踪.md",
+        "03-总结文档与状态同步.md",
+        "04-未闭环项决策与实施方案.md"
+      ]
+    }
+  ],
+  "added_documents_2026_11_11": [
+    "YYC3-文档与日志机制规范.md",
+    "agent-builder-hunyuan-20261111/00-项目现状审核报告.md",
+    "agent-builder-hunyuan-20261111/01-任务规划与节点目标.md",
+    "agent-builder-hunyuan-20261111/02-执行日志与进度跟踪.md",
+    "agent-builder-hunyuan-20261111/03-总结文档与状态同步.md",
+    "agent-builder-hunyuan-20261111/04-未闭环项决策与实施方案.md",
+    "04-测试审核阶段/0402-质量审核/003-首次全量回归测试报告.md",
+    "05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md",
+    "06-运维保障阶段/0601-运维策略/003-可观测性与运行日志手册.md",
+    "06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md",
+    "07-合规安全保障/0701-安全管理/003-执行引擎安全基线与SSRF加固.md"
+  ],
+  "related_root_documents": [
+    "CHANGELOG.md",
+    "README.md",
+    ".env.example",
+    "Dockerfile",
+    ".dockerignore"
+  ],
+  "mechanism": {
+    "standard": "YYC3-文档与日志机制规范.md",
+    "runtime_logger": "lib/logger.ts",
+    "changelog": "CHANGELOG.md",
+    "decision_records": "agent-builder-hunyuan-20261111/04-未闭环项决策与实施方案.md"
+  },
+  "code_artifacts_2026_11_11": {
+    "engine": "lib/workflow-engine.ts",
+    "rate_limit": "lib/rate-limit-store.ts",
+    "health": "app/api/health/route.ts",
+    "container": ["Dockerfile", ".dockerignore"],
+    "compose": ["deploy/docker-compose.prod.yml", "deploy/.env.production.example"]
+  },
+  "topology": {
+    "doc": "06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md",
+    "nodes": ["yyc3-22", "yyc3-45", "yyc3-n1", "yyc3-n2", "yyc3-33", "yyc3-77", "yyc3-66"],
+    "pg": { "version": 15, "ports": [5433], "primary_recommendation": "yyc3-45", "standby_recommendation": "yyc3-22" }
+  }
 }

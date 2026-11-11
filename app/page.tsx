@@ -172,6 +172,7 @@ export default function AgentBuilder() {
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
   const [showCodeExport, setShowCodeExport] = useState(false)
   const [showExecution, setShowExecution] = useState(false)
+  const [runToken, setRunToken] = useState(0)
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
   const nodeIdCounter = useRef(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -189,7 +190,9 @@ export default function AgentBuilder() {
         data: { ...n.data, status: undefined, output: undefined },
       }))
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ nodes: cleanNodes, edges }))
-    } catch { }
+    } catch {
+      // localStorage 不可用（隐私模式/配额满）时静默降级为内存态工作流
+    }
   }, [nodes, edges])
 
   const onNodesChange: OnNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [])
@@ -322,13 +325,7 @@ export default function AgentBuilder() {
 
   const handleRun = useCallback(() => {
     setShowExecution(true)
-    // Trigger execution after panel opens
-    setTimeout(() => {
-      const executeButton = document.querySelector("[data-execute-workflow]") as HTMLButtonElement
-      if (executeButton) {
-        executeButton.click()
-      }
-    }, 100)
+    setRunToken((token) => token + 1)
   }, [])
 
   return (
@@ -434,6 +431,7 @@ export default function AgentBuilder() {
             onClose={() => setShowExecution(false)}
             onNodeStatusChange={handleNodeStatusChange}
             onNodeOutputChange={handleNodeOutputChange}
+            autoRunToken={runToken}
           />
         )}
       </div>

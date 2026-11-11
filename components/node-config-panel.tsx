@@ -410,6 +410,32 @@ export function NodeConfigPanel({ node, onClose, onUpdate }: NodeConfigPanelProp
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="schema">JSON Schema</Label>
+              <Textarea
+                id="schema"
+                value={node.data.schema || ""}
+                onChange={(e) => handleUpdate("schema", e.target.value)}
+                placeholder='{"type":"object","properties":{"name":{"type":"string"}},"required":["name"]}'
+                rows={8}
+                className="font-mono text-sm"
+              />
+              <p className="text-xs text-muted-foreground">
+                JSON Schema used to constrain and validate the model output
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="prompt">Fallback Prompt</Label>
+              <Textarea
+                id="prompt"
+                value={node.data.prompt || ""}
+                onChange={(e) => handleUpdate("prompt", e.target.value)}
+                placeholder="Used when no upstream node is connected"
+                rows={4}
+              />
+            </div>
           </div>
         )
 
