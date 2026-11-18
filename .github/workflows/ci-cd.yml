@@ -1,7 +1,11 @@
 # ============================================================
 # YYC³ Agent Builder — CI Pipeline
 # ============================================================
-# Quality Gate: Lint → TypeScript → Test → Build
+# Quality Gate: Install → Audit(prod) → Lint → TypeScript → Test → Coverage → Build
+# Security: production dependency audit is a hard gate — any moderate+ advisory fails CI.
+# Accepted risk (dev-only): picomatch ReDoS (GHSA-fc5q-39xc-vjpf) exists only in the
+#   eslint chain. As of 2026-11-17 advisory patched=<0.0.0>, latest=4.0.7 (still affected).
+#   No upstream fix; not in production runtime. Re-evaluate when a patched release ships.
 # ============================================================
 
 name: CI — Quality Gate
@@ -11,11 +15,20 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   # pnpm 11 需 Node ≥22.13（node:sqlite）——旧值 20 致 CI 全红（ERR_UNKNOWN_BUILTIN_MODULE）
   NODE_VERSION: "22"
   PNPM_VERSION: "11"
+  NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
   quality:
@@ -37,15 +50,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Dependency security audit (production)
+        run: pnpm audit --prod --audit-level=moderate --registry=https://registry.npmjs.org
 
       - name: ESLint
         run: pnpm lint
 
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       - name: Unit tests
         run: pnpm test
@@ -59,8 +76,7 @@ jobs:
           name: coverage-report
           path: __tests__/coverage/
           retention-days: 7
+          if-no-files-found: warn
 
       - name: Build verification
         run: pnpm build
-        env:
-          NEXT_TELEMETRY_DISABLED: "1"

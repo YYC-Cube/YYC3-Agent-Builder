@@ -6,14 +6,27 @@ import { generateText } from "ai"
 
 export const maxDuration = 30
 
-function validateUrl(url: string): void {
+export function validateUrl(url: string): void {
   try {
     const parsed = new URL(url)
     if (!["http:", "https:"].includes(parsed.protocol)) {
       throw new Error(`Forbidden protocol: ${parsed.protocol}`)
     }
-    if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1" || parsed.hostname.startsWith("192.168.") || parsed.hostname.startsWith("10.") || parsed.hostname.startsWith("172.")) {
-      throw new Error("SSRF protection: Private network addresses are not allowed")
+    const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "")
+    const isBlockedHost =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "::1" ||
+      hostname === "::" ||
+      hostname.startsWith("192.168.") ||
+      hostname.startsWith("10.") ||
+      hostname.startsWith("172.") ||
+      hostname.startsWith("169.254.") ||
+      hostname.startsWith("fc00:") ||
+      hostname.startsWith("fd00:") ||
+      hostname.startsWith("fe80:")
+    if (isBlockedHost) {
+      throw new Error("SSRF protection: Private, loopback, link-local or metadata addresses are not allowed")
     }
   } catch (e: any) {
     if (e.message.includes("SSRF") || e.message.includes("Forbidden")) throw e
