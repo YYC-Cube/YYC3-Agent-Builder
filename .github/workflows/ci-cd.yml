@@ -2,10 +2,16 @@
 # YYC³ Agent Builder — CI Pipeline
 # ============================================================
 # Quality Gate: Install → Audit(prod) → Lint → TypeScript → Test → Coverage → Build
+# Deploy:       main push → GitHub Pages（静态导出，agent.yyc3.vip）
 # Security: production dependency audit is a hard gate — any moderate+ advisory fails CI.
 # Accepted risk (dev-only): picomatch ReDoS (GHSA-fc5q-39xc-vjpf) exists only in the
 #   eslint chain. As of 2026-11-17 advisory patched=<0.0.0>, latest=4.0.7 (still affected).
 #   No upstream fix; not in production runtime. Re-evaluate when a patched release ships.
+# Note: pnpm version is pinned via package.json "packageManager" (pnpm@10.17.0);
+#   do NOT set action-setup version input separately — it would conflict.
+# Pages 限制：静态托管无法承载 POST/流式 API，/api/* 不参与 Pages 导出；
+#   工作流执行需使用 Vercel 主部署。前置：仓库 Settings → Pages → Source 选
+#   "GitHub Actions"。
 # ============================================================
 
 name: CI — Quality Gate
@@ -25,9 +31,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # pnpm 11 需 Node ≥22.13（node:sqlite）——旧值 20 致 CI 全红（ERR_UNKNOWN_BUILTIN_MODULE）
+  # pnpm 10 需 Node ≥18；Node 22 同时满足 pnpm 11 要求（历史提交 86952c7）
   NODE_VERSION: "22"
-  PNPM_VERSION: "11"
   NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
@@ -40,10 +45,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pnpm
+      - name: Install pnpm (pinned via packageManager field)
         uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -80,3 +83,66 @@ jobs:
 
       - name: Build verification
         run: pnpm build
+
+  deploy:
+    name: "🚀 GitHub Pages Deploy"
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm (pinned via packageManager field)
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 静态托管无法服务 POST/流式 API；__tests__ 引用 API 模块，一并排除
+      - name: Exclude API routes and tests from Pages export
+        run: |
+          mv app/api "$RUNNER_TEMP/api-excluded"
+          mv __tests__ "$RUNNER_TEMP/__tests__-excluded"
+
+      - name: "Static export build (BUILD_TARGET=pages → output: export)"
+        run: pnpm exec next build
+        env:
+          BUILD_TARGET: pages
+
+      - name: Disable Jekyll (preserve _next/ underscore paths)
+        run: touch out/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

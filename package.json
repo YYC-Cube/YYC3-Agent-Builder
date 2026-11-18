@@ -2,6 +2,7 @@
   "name": "yyc3-agent-builder",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.17.0",
   "scripts": {
     "build": "next build",
     "dev": "next dev --port 3146",
