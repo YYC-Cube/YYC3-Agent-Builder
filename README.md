@@ -3,8 +3,7 @@
 **CloudPivot Intelli-Matrix** · 言启千行代码，语枢万物智能
 
 <p align="center">
-  <b>YYC³</b>（YanYuCloudCube™ · 注册商标）<br>
-  可视化 AI 工作流编排平台 · 开源级标准
+  <img src="./public/Family-002.png" alt="YYC³ Agent Builder" width="100%" max-width="800" />
 </p>
 
 <div align="center">
@@ -92,7 +91,7 @@
 | 样式系统 | Tailwind CSS v4 + oklch 色彩系统 | 原子化 CSS，设计系统统一 |
 | 主题 | 暗色/浅色（next-themes） | oklch 色深色主题变量 |
 | 流程图 | @xyflow/react（React Flow） | 节点编辑器，拖拽式编排 |
-| 品牌主图 | `public/Family-002.png` | 画布/登录/认证页全端展示 |
+| 品牌主图 | `public/Family-002.png` | 1800 × 450（原始尺寸） | 画布/登录/认证页全端展示 |
 | 图标 | lucide-react | 统一图标库 |
 
 ### 可视化交互体系
