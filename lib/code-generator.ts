@@ -16,7 +16,7 @@ export function generateAISDKCode(nodes: CodeGenNode[], edges: Edge[]): string {
   const incomingEdges = new Set(edges.map((e) => e.target))
   const entryNodes = nodes.filter((node) => !incomingEdges.has(node.id) || node.type === "start")
 
-  let code = `import { generateText, embed, generateObject, tool } from 'ai';\n`
+  let code = `import { generateText, embed, generateObject, generateImage, tool } from 'ai';\n`
   code += `import { google } from '@ai-sdk/google';\n`
   code += `import { openai } from '@ai-sdk/openai';\n`
   code += `import { z } from 'zod';\n\n`
@@ -94,7 +94,7 @@ export function generateAISDKCode(nodes: CodeGenNode[], edges: Edge[]): string {
           nodeCode += `${indent}  model: '${node.data.model || "openai/gpt-5-mini"}',\n`
           nodeCode += `${indent}  prompt: ${textInputVar},\n`
           nodeCode += `${indent}  temperature: ${node.data.temperature || 0.7},\n`
-          nodeCode += `${indent}  maxTokens: ${node.data.maxTokens || 2000},\n`
+          nodeCode += `${indent}  maxOutputTokens: ${node.data.maxTokens || 2000},\n`
           nodeCode += `${indent}});\n`
           nodeCode += `${indent}const ${varName} = ${varName}_result.text;\n\n`
         }
@@ -105,12 +105,12 @@ export function generateAISDKCode(nodes: CodeGenNode[], edges: Edge[]): string {
         const imgInputVars = getInputVariables(nodeId)
         const imgInputVar = imgInputVars.length > 0 ? imgInputVars[0] : '""'
 
-        nodeCode += `${indent}const ${varName}_result = await generateText({\n`
-        nodeCode += `${indent}  model: google('${node.data.model || "gemini-2.5-flash-image"}'),\n`
+        const modelId = node.data.model || "gemini-2.5-flash-image"
+        nodeCode += `${indent}const ${varName}_result = await generateImage({\n`
+        nodeCode += `${indent}  model: google.image('${modelId}'),\n`
         nodeCode += `${indent}  prompt: ${imgInputVar},\n`
         nodeCode += `${indent}});\n`
-        nodeCode += `${indent}// Extract images from files\n`
-        nodeCode += `${indent}const ${varName} = ${varName}_result.files?.filter(f => f.mediaType.startsWith('image/')).map(f => f.base64) || [];\n\n`
+        nodeCode += `${indent}const ${varName} = (${varName}_result.images ?? [${varName}_result.image].flat()).filter(Boolean).map((i: any) => i?.base64 ?? i) || [];\n\n`
         break
 
       case "audio":
@@ -210,11 +210,15 @@ export function generateAISDKCode(nodes: CodeGenNode[], edges: Edge[]): string {
         if (trueEdge || falseEdge) {
           nodeCode += `${indent}if (${varName}) {\n`
           if (trueEdge) {
-            nodeCode += `${indent}  // True branch\n`
+            nodeCode += generateNodeCode(trueEdge.target, `${indent}  `)
+          } else {
+            nodeCode += `${indent}  // True branch: no target node\n`
           }
           nodeCode += `${indent}} else {\n`
           if (falseEdge) {
-            nodeCode += `${indent}  // False branch\n`
+            nodeCode += generateNodeCode(falseEdge.target, `${indent}  `)
+          } else {
+            nodeCode += `${indent}  // False branch: no target node\n`
           }
           nodeCode += `${indent}}\n\n`
         }
@@ -291,7 +295,7 @@ export function generateRouteHandlerCode(nodes: CodeGenNode[], edges: Edge[]): s
       code += `      model: '${textNode.data.model || "openai/gpt-5-mini"}',\n`
       code += `      prompt: input,\n`
       code += `      temperature: ${textNode.data.temperature || 0.7},\n`
-      code += `      maxTokens: ${textNode.data.maxTokens || 2000},\n`
+      code += `      maxOutputTokens: ${textNode.data.maxTokens || 2000},\n`
       code += `    });\n\n`
     }
   }
@@ -300,11 +304,11 @@ export function generateRouteHandlerCode(nodes: CodeGenNode[], edges: Edge[]): s
     const imgNode = nodes.find((n) => n.type === "imageGeneration")
     if (imgNode) {
       code += `    // Image Generation\n`
-      code += `    const imageResult = await generateText({\n`
-      code += `      model: google('${imgNode.data.model || "gemini-2.5-flash-image"}'),\n`
+      code += `    const imageResult = await generateImage({\n`
+      code += `      model: google.image('${imgNode.data.model || "gemini-2.5-flash-image"}'),\n`
       code += `      prompt: input,\n`
       code += `    });\n`
-      code += `    const images = imageResult.files?.filter(f => f.mediaType.startsWith('image/')).map(f => f.base64) || [];\n\n`
+      code += `    const images = (imageResult.images ?? [imageResult.image].flat()).filter(Boolean).map((i: any) => i?.base64 ?? i) || [];\n\n`
     }
   }
 

@@ -24,7 +24,7 @@
 [![ESLint](https://img.shields.io/badge/ESLint-0_warnings-22C55E?logo=eslint&logoColor=white&labelColor=222)]()
 [![Build](https://img.shields.io/badge/Build-passing-22C55E?logo=next.js&logoColor=white&labelColor=222)]()
 [![i18n](https://img.shields.io/badge/i18n-10_languages-8B5CF6?logo=localize&logoColor=white&labelColor=222)]()
-[![License](https://img.shields.io/badge/License-Private-EF4444?logo=github&logoColor=white&labelColor=222)]()
+[![License](https://img.shields.io/badge/License-MIT-EF4444?logo=github&logoColor=white&labelColor=222)]()
 
 [![Domain](https://img.shields.io/badge/agent.yyc3.vip-8B5CF6?logo=cloudflare&logoColor=white&labelColor=222)](https://agent.yyc3.vip)
 [![Changelog](https://img.shields.io/badge/Changelog-v0.1.2-6B7280?logo=git&logoColor=white&labelColor=222)](./CHANGELOG.md)
@@ -56,12 +56,12 @@
 
 ## ✨ 概述
 
-**YYC³ Agent Builder** 是一个基于 **Next.js 16** + **React 19** + **React Flow** 构建的**可视化 AI 工作流编排平台**，支持拖拽式节点编排、实时流式执行、一键代码导出和 10 种语言国际化。
+**YYC³ Agent Builder** 是一个基于 **Next.js 16** + **React 19** + **React Flow** 构建的**可视化 AI 工作流编排平台**，支持拖拽式节点编排、实时流式执行（NDJSON 分块推送）、一键代码导出和 10 种语言国际化。
 
 ### 核心能力
 
 - **🧩 可视化编排** — 拖拽 12 种节点 + 连线构建 AI 工作流
-- **⚡ 实时执行** — SSE 流式执行引擎，实时反馈节点状态
+- **⚡ 实时执行** — NDJSON 分块推送执行引擎，实时反馈节点状态
 - **🔌 多模型支持** — OpenAI GPT / Google Gemini / Anthropic Claude / xAI Grok
 - **🔀 条件分支** — JavaScript 条件表达式，TRUE/FALSE 双路径
 - **🌐 HTTP 集成** — 请求外部 API，支持变量插值
@@ -511,7 +511,7 @@ ignores: ["coverage/**", "__tests__/coverage/**", ".next/**"];
 # NAS（yyc3-45 / Docker V3）推荐路径
 cd deploy && cp .env.production.example .env.production
 docker compose -f docker-compose.prod.yml up -d --build
-curl -fsS http://100.65.172.88:3000/api/health   # rateLimitStore 应为 redis
+curl -fsS http://${CHANGE_ME_TAILSCALE_IP}:3000/api/health   # rateLimitStore 应为 redis
 
 # 单机直跑
 docker build -t yyc3-agent-builder:0.1.2 .
@@ -520,7 +520,7 @@ docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
 
 生产必配 `WORKFLOW_API_TOKEN`；NAS 部署使用内置 Redis（`REDIS_URL`），托管多实例使用 `UPSTASH_REDIS_REST_URL/TOKEN`；公网入口由 ECS `yyc3-33` 反代并关闭 SSE 缓冲。
 
-**数据库（已定案）**：PG15 **NAS `100.65.172.88:5433` 主、Mac `100.87.159.21:5433` 备**（两台主机各监听 5433）。切换与演练见 [PG15 主备切换与演练手册](./docs/06-运维保障阶段/0601-运维策略/005-PG15主备切换与演练手册.md)；完整落位与数据盘选型见 [集群拓扑与部署映射](./docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md)，操作步骤见 [生产部署定案与运行手册](./docs/05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md)。
+**数据库（已定案）**：PG15 **`${CHANGE_ME_PG_PRIMARY_HOST}:5433` 主、`${CHANGE_ME_PG_REPLICA_HOST}:5433` 备**（真实主机名/IP 仅写入不入库的 `.env.production`，不可硬编码入仓库）。切换与演练见 [PG15 主备切换与演练手册](./docs/06-运维保障阶段/0601-运维策略/005-PG15主备切换与演练手册.md)；完整落位与数据盘选型见 [集群拓扑与部署映射](./docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md)，操作步骤见 [生产部署定案与运行手册](./docs/05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md)。
 
 ---
 

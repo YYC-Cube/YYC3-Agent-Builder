@@ -24,6 +24,12 @@ const MAX_GRAPH_DEPTH = 100
 const AI_CALL_TIMEOUT_MS = 25_000
 const ALLOWED_HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"] as const
 
+/** 合并外部取消信号与单调用超时，客户端断开时可立即取消进行中的 AI 调用 */
+function resolveAbortSignal(signal: AbortSignal | undefined): AbortSignal {
+  if (!signal) return AbortSignal.timeout(AI_CALL_TIMEOUT_MS)
+  return AbortSignal.any([signal, AbortSignal.timeout(AI_CALL_TIMEOUT_MS)])
+}
+
 export type ExecutionResult = {
   nodeId: string
   type: string
@@ -46,6 +52,8 @@ export type ExecuteWorkflowOptions = {
   onUpdate?: (update: StreamUpdate) => void
   /** 仅测试使用：覆盖最大递归深度 */
   maxDepth?: number
+  /** 客户端断开/预算超时时取消整个执行（含进行中的 AI 调用） */
+  signal?: AbortSignal
 }
 
 export function interpolateVariables(template: string, inputs: unknown[]): string {
@@ -72,9 +80,11 @@ export async function executeWorkflow({
   edges,
   onUpdate,
   maxDepth = MAX_GRAPH_DEPTH,
+  signal,
 }: ExecuteWorkflowOptions): Promise<ExecutionResult[]> {
   const log = createLogger("workflow-engine")
   const sendUpdate = (update: StreamUpdate) => onUpdate?.(update)
+  const callSignal = resolveAbortSignal(signal)
 
   const nodeMap = new Map(nodes.map((node) => [node.id, node]))
   const results = new Map<string, unknown>()
@@ -274,7 +284,7 @@ export async function executeWorkflow({
               prompt: `${prompt}\n\nRespond in JSON format matching this schema: ${node.data.schema}`,
               temperature: Number(node.data.temperature || 0.7),
               maxOutputTokens: Number(node.data.maxTokens || 2000),
-              abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+              abortSignal: callSignal,
             })
             output = textResult.text
             executionLog.push({
@@ -293,7 +303,7 @@ export async function executeWorkflow({
               prompt,
               temperature: Number(node.data.temperature || 0.7),
               maxOutputTokens: Number(node.data.maxTokens || 2000),
-              abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+              abortSignal: callSignal,
             })
             output = textResult.text
             executionLog.push({
@@ -319,7 +329,7 @@ export async function executeWorkflow({
             model: resolveImageModel(modelId),
             prompt: imagePrompt,
             aspectRatio,
-            abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+            abortSignal: callSignal,
           })
 
           const generated = imageResult.images ?? (imageResult.image ? [imageResult.image] : [])
@@ -367,7 +377,7 @@ export async function executeWorkflow({
             model: openai.speech(speechModelId),
             text: audioText,
             voice,
-            abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+            abortSignal: callSignal,
           })
           const mediaType = (speechResult.audio as { mediaType?: string }).mediaType ?? "audio/mpeg"
           const audioUrl = `data:${mediaType};base64,${speechResult.audio.base64}`
@@ -389,7 +399,7 @@ export async function executeWorkflow({
           const embedResult = await embed({
             model: openai.embedding(embedModelId.replace(/^openai\//, "")),
             value: embedText,
-            abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+            abortSignal: callSignal,
           })
 
           output = {
@@ -436,7 +446,7 @@ export async function executeWorkflow({
             model: resolveModel(String(node.data.model || "openai/gpt-5")),
             output: outputSpec,
             prompt: structuredPrompt,
-            abortSignal: AbortSignal.timeout(AI_CALL_TIMEOUT_MS),
+            abortSignal: callSignal,
           })
 
           output = structuredResult.output

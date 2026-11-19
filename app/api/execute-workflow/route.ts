@@ -13,6 +13,13 @@ const MAX_NODES = 200
 const MAX_EDGES = 500
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
+/**
+ * 统一执行超时预算：Next.js Route Handler 的 maxDuration=30s，单个 AI 调用 25s。
+ * 若图中节点数较多，累计可能超过 30s；生产部署时应按实际节点数/并发度在部署平台
+ * 相应调大超时，或将长流程拆分为多次执行。
+ */
+const EXECUTION_BUDGET_MS = 28_000
+
 function jsonError(message: string, status: number, log: ReturnType<typeof createLogger>): Response {
   log.warn("invalid request", { status, message })
   return new Response(JSON.stringify({ type: "error", error: message }), {
@@ -35,6 +42,18 @@ export async function POST(req: Request) {
       headers,
     })
   }
+
+  // 客户端断开时取消整个执行（含进行中的 AI 调用），避免资源泄露与无效计算
+  const abortController = new AbortController()
+  const executionSignal = AbortSignal.any([req.signal, AbortSignal.timeout(EXECUTION_BUDGET_MS)])
+
+  executionSignal.addEventListener("abort", () => {
+    log.warn("execution aborted by client disconnect or budget timeout", {
+      reason: executionSignal.reason?.message ?? "unknown",
+      clientId: guard.clientId,
+    })
+    abortController.abort(executionSignal.reason)
+  })
 
   let nodes: Node[]
   let edges: Edge[]
@@ -119,7 +138,7 @@ export async function POST(req: Request) {
       }
 
       try {
-        const executionLog = await executeWorkflow({ nodes, edges, onUpdate: sendUpdate })
+        const executionLog = await executeWorkflow({ nodes, edges, onUpdate: sendUpdate, signal: executionSignal })
         log.info("workflow execution completed", { executedNodes: executionLog.length, runId })
         sendUpdate({ type: "complete", executionLog })
         await persistQueue
