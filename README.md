@@ -153,7 +153,7 @@ sequenceDiagram
 
 | 类别 | 技术 | 版本 | 说明 |
 |------|------|------|------|
-| **框架** | [Next.js](https://nextjs.org) (App Router) | 16.4.2 | React 全栈框架 |
+| **框架** | [Next.js](https://nextjs.org) (App Router) | 16.4.5 | React 全栈框架 |
 | **UI 引擎** | [React](https://react.dev) | 19.1.0 | 声明式 UI |
 | **组件库** | [shadcn/ui](https://ui.shadcn.com) (new-york) | — | 56 个 Radix UI 组件 |
 | **原语** | [Radix UI](https://radix-ui.com) | 精确锁定（见 `package.json`） | 无障碍 UI 原语 |
