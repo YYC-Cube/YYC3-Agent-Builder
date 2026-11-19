@@ -116,7 +116,7 @@ describe("generateAISDKCode - Additional Edge Cases", () => {
     const code = generateAISDKCode(nodes, edges)
     expect(code).toContain("generateText")
     expect(code).toContain("temperature: 0.5")
-    expect(code).toContain("maxTokens: 500")
+    expect(code).toContain("maxOutputTokens: 500")
   })
 
   it("should handle mixed conditional branch with true only", () => {
@@ -128,7 +128,9 @@ describe("generateAISDKCode - Additional Edge Cases", () => {
     const edges = [makeEdge("1", "2"), makeEdge("2", "3", "true")]
     const code = generateAISDKCode(nodes, edges)
     expect(code).toContain("Conditional Node")
-    expect(code).toContain("True branch")
+    expect(code).toContain("Prompt Node")
+    expect(code).toContain("Positive")
+    expect(code).toContain("// False branch: no target node")
   })
 
   it("should handle a complex multi-node workflow end-to-end", () => {

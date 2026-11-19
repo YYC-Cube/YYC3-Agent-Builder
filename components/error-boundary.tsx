@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import { BrandLogo } from "@/components/brand-logo"
 import { Button } from "@/components/ui/button"
 import { AlertTriangle } from "lucide-react"
 
@@ -33,6 +34,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       if (this.props.fallback) return this.props.fallback
       return (
         <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-background p-8">
+          <BrandLogo size={48} />
           <AlertTriangle className="h-12 w-12 text-destructive" />
           <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
           <p className="max-w-md text-center text-sm text-muted-foreground">

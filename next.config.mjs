@@ -3,15 +3,18 @@
  *
  * Deployment:
  *   - Primary: Vercel (supports API routes natively)
- *   - Custom domain: agent.yyc3.vip (configured in Vercel dashboard)
- *   - CNAME in /public for DNS verification
+ *   - GitHub Pages: static export only — set BUILD_TARGET=pages to enable
+ *     `output: "export"`. API routes are excluded from the Pages build
+ *     (static hosting cannot serve POST/streaming handlers); workflows run
+ *     via /api/execute-workflow require the Vercel deployment.
+ *   - Custom domain: agent.yyc3.vip (CNAME in /public for DNS verification)
  */
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // 生成自包含 server.js + 精简 node_modules，供容器化部署使用；
   // `next start` 与 Vercel 部署不受影响。
-  output: "standalone",
+  output: process.env.BUILD_TARGET === "pages" ? "export" : "standalone",
   typescript: {
     ignoreBuildErrors: false,
   },

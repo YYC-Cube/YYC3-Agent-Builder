@@ -28,12 +28,46 @@ complexity: basic
 
 ## [Unreleased]
 
+### Security
+
+- **默认熔断不可信代码执行**：`javascript` / `tool` 节点需显式设置 `ENABLE_UNSAFE_CODE_NODES=true` 才可执行；`conditional` 改用 `lib/expression-evaluator.ts` 受限表达式求值（白名单变量/方法/运算符，禁止 `constructor` / `__proto__` / `prototype` 与任意全局对象）。
+- 移除部署模板中的固定 Tailscale IP，改为 `CHANGE_ME_*` 占位；真实地址仅写入不入库的 `.env.production`。
+
 ### Added
 
 - `deploy/docker-compose.prod.yml`：NAS（yyc3-45 / Docker V3）生产编排，app 仅绑定 Tailscale 地址 + 内置 Redis + 健康检查 + 资源上限。
 - `deploy/.env.production.example`：NAS 环境模板（含 PG15 主备 `5433` 占位）。
 - `lib/rate-limit-store.ts`：新增 `IoredisRateLimitStore`，支持 `REDIS_URL` 直连 NAS 本地 Redis；优先级 `REDIS_URL` > Upstash REST > 内存。
 - `docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md`：七节点落位、PG 主备方向、数据盘选型、备份与安全边界。
+- `docs/06-运维保障阶段/0601-运维策略/005-PG15主备切换与演练手册.md`：switchover / failover / `pg_rewind` 回加入 / 季度演练验收。
+- **持久化阶段 A**：`lib/db/schema.ts`（Better Auth 四表 + workflows/workflow_versions/runs/run_events）、`lib/db/index.ts`（postgres.js 主/只读连接）、`db/migrations/0000_black_medusa.sql`（含索引、外键、`updated_at` 触发器）、`drizzle.config.ts`、`db/README.md`。
+- `docs/agent-builder-hunyuan-20261111/05-持久化阶段A建表说明.md`：表设计、执行顺序、验证 SQL、回滚与阶段 B/C 衔接。
+- 依赖：`drizzle-orm`、`postgres`；dev：`drizzle-kit`、`dotenv`；scripts：`db:generate/db:check/db:migrate/db:push/db:studio`。
+- 测试：`db-schema.test.ts`、`db-connection.test.ts`；总数 227 → **237**。
+- **阶段 B**：`lib/auth.ts` + `app/api/auth/[...all]/route.ts`（Better Auth 1.7.20 邮箱密码）、`app/login/page.tsx`；
+  `app/api/workflows/route.ts` 与 `[id]/route.ts`（列表/创建/读取/更新/删除，归属隔离 + zod 校验）；
+  `lib/workflows/{validation,repository}.ts`、`lib/runs/repository.ts`、`lib/api/require-user.ts`；
+  执行 API 支持 `workflowId`，按 `seq` 写 `runs`/`run_events`，会话用户跳过执行令牌并按用户限流；
+  前端新增「云端」菜单（保存/加载/删除），执行面板自动携带 `workflowId`。
+- 测试：`workflows.test.ts`、`cloud-workflows.test.tsx` 与执行落库用例；总数 237 → **253**。
+- 环境变量：`BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` / `NEXT_PUBLIC_APP_URL`。
+
+### Added（UI / 品牌）
+
+- **明/暗主题切换**：`ThemeToggle`（`next-themes` + `useSyncExternalStore` 防水合差异），补齐 `:root` 浅色变量与 `.dark` 深色变量，React Flow 连线/面板跟随主题。
+- **登录页视觉**：使用 `public/yyc3-login-bg.png` 全屏背景 + 左侧渐变压暗；桌面端登录卡右移（`lg:justify-end` + `clamp(2rem,9vw,10rem)`），移动端居中；新增 `AuthShell` 统一 forgot/reset/verify/404。
+- **品牌 Logo 全页面**：`BrandLogo` 接入主画布头部、登录/找回/重置/验证/404；`metadata.icons`、`site.webmanifest`、`app/icon.png`、`app/apple-icon.png` 全部指向 `public/yyc3-icons` 真实资源；新增 iOS PWA 元数据。
+
+### Fixed
+
+- 修复 `next-themes` 注入 `html.dark` / `color-scheme` 与服务端 HTML 不一致的水合告警：`<html suppressHydrationWarning lang="zh-CN">`。
+- 修复 metadata 指向不存在的 `/yyc3/Web App/*` 图标路径导致的 404。
+
+### Confirmed（2026-11-11）
+
+- 数据库主备方向：**NAS（yyc3-45）主、Mac（yyc3-22）备**；两台主机各监听 `5433`。
+- **PGDATA 从 V2 HDD RAID6 迁到 V3 NVMe RAID1**；执行单见 `docs/06-.../006-PGDATA迁移至V3执行单.md`。
+- 应用与 Redis 落位 yyc3-45 Docker V3；公网仅经 yyc3-33 ECS 反代。
 
 ### Changed
 
@@ -41,9 +75,23 @@ complexity: basic
 - `.env.example`：补充 `REDIS_URL`、`DATABASE_URL` / `DATABASE_REPLICA_URL` 占位。
 - 测试：限流存储新增 4 例（本地 Redis 结果解析、优先级、降级），总数 224 → **227**。
 
+### Security
+
+- **依赖漏洞清零**：`zod 4.4.3 → 4.6.6`、`vitest 5.0.1 → 5.1.0`，并覆盖 `undici ≥7.30.1`、`source-map-js ≥1.2.2`、`browserslist ≥4.28.7`、`vite 8.1.6`、`brace-expansion ≥5.0.12`、`minimatch ≥11.0.1`；`pnpm audit` 由 22 项（9 high）降为 **0**。
+- 认证端点限流：登录 10/60s、注册 5/60s、重置/重发 5/60s；生产 `trustedOrigins` 仅允许 `BETTER_AUTH_URL`。
+- 注册强制邮箱验证；重置密码后吊销其它会话；发信回调不 `await` 防时序攻击；忘记密码返回通用提示防账号枚举。
+
+### Added（账号流程）
+
+- `/verify-email`、`/forgot-password`、`/reset-password` 三个页面；登录页增加未验证提示、重发验证、忘记密码入口。
+- `lib/email.ts`（nodemailer + SMTP）；测试：`email.test.ts`、`auth-pages.test.tsx`；总数 253 → **259**。
+
 ### Known Limits
 
-- `DATABASE_URL` 尚未被应用读取，持久化仍为 ADR；需先确认 PG 主备方向与数据盘迁移。
+- 已在临时 PG17（55433）验证迁移与全链路 E2E；生产 PG15 仍需在维护窗口执行 `db:migrate`。
+- `run_events.payload` 保存完整事件（含图片/音频 data URL），长音频会放大表体积；阶段 C 改对象存储引用。
+- 登录仅邮箱密码，未做 OAuth/SSO；邮箱验证与找回密码已补齐。
+- 未配置 SMTP 时生产会拒绝发信；部署前必须配置 SMTP 或改用 Resend 等事务邮件服务。
 
 ---
 

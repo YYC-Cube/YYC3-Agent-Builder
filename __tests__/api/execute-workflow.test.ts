@@ -1,5 +1,8 @@
 import { POST } from "@/app/api/execute-workflow/route"
 import { resetRateLimitState } from "@/lib/api-guard"
+import { getRequestUser } from "@/lib/auth"
+import { appendRunEvent, createRun, finishRun } from "@/lib/runs/repository"
+import { getWorkflow } from "@/lib/workflows/repository"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("ai", () => ({
@@ -30,6 +33,13 @@ vi.mock("@ai-sdk/openai", () => ({
   },
 }))
 vi.mock("@/lib/model-resolver", () => ({ resolveModel: vi.fn(() => ({})) }))
+vi.mock("@/lib/auth", () => ({ getRequestUser: vi.fn(async () => null) }))
+vi.mock("@/lib/workflows/repository", () => ({ getWorkflow: vi.fn() }))
+vi.mock("@/lib/runs/repository", () => ({
+  createRun: vi.fn(),
+  appendRunEvent: vi.fn(),
+  finishRun: vi.fn(),
+}))
 vi.mock("node:dns/promises", () => {
   const lookupMock = vi.fn(async () => [{ address: "8.8.8.8", family: 4 }])
   return { default: { lookup: lookupMock }, lookup: lookupMock }
@@ -71,6 +81,12 @@ function completeEvent(events: StreamEvent[]): StreamEvent | undefined {
 }
 
 beforeEach(() => {
+  vi.clearAllMocks()
+  vi.mocked(getRequestUser).mockReset().mockResolvedValue(null)
+  vi.mocked(getWorkflow).mockReset()
+  vi.mocked(createRun).mockReset().mockResolvedValue(null)
+  vi.mocked(appendRunEvent).mockReset().mockResolvedValue(undefined)
+  vi.mocked(finishRun).mockReset().mockResolvedValue(undefined)
   vi.unstubAllEnvs()
   vi.stubEnv("LOG_LEVEL", "silent")
   vi.stubEnv("WORKFLOW_RATE_LIMIT_MAX", "1000")
@@ -353,5 +369,56 @@ describe("POST /api/execute-workflow — 安全与健壮性", () => {
       ),
     )
     expect(events.find((event) => event.type === "error")?.error).toContain("maximum execution depth")
+  })
+})
+
+describe("POST /api/execute-workflow — 运行记录落库（阶段 B）", () => {
+  const WORKFLOW_ID = "22222222-2222-4222-8222-222222222222"
+
+  const workflowPayload = {
+    workflowId: WORKFLOW_ID,
+    nodes: [node("n1", "start")],
+    edges: [],
+  }
+
+  it("登录用户绑定 workflowId 时创建 run、写事件并标记成功", async () => {
+    vi.mocked(getRequestUser).mockResolvedValue({ id: "u1", email: "u@example.com", name: "U" })
+    vi.mocked(getWorkflow).mockResolvedValue({ id: WORKFLOW_ID } as never)
+    vi.mocked(createRun).mockResolvedValue("run-1")
+    vi.mocked(appendRunEvent).mockResolvedValue(undefined)
+    vi.mocked(finishRun).mockResolvedValue(undefined)
+
+    const events = await collect(await POST(makeRequest(workflowPayload)))
+
+    expect(createRun).toHaveBeenCalledWith({ workflowId: WORKFLOW_ID, userId: "u1" })
+    expect(appendRunEvent).toHaveBeenCalled()
+    expect(vi.mocked(appendRunEvent).mock.calls[0]?.[0]).toBe("run-1")
+    expect(vi.mocked(appendRunEvent).mock.calls[0]?.[1]).toBe(1)
+    expect(finishRun).toHaveBeenCalledWith("run-1", "succeeded")
+    expect(completeEvent(events)).toBeDefined()
+  })
+
+  it("绑定 workflowId 但未登录返回 401", async () => {
+    const response = await POST(makeRequest(workflowPayload))
+    expect(response.status).toBe(401)
+    expect(createRun).not.toHaveBeenCalled()
+  })
+
+  it("工作流不属于当前用户返回 404", async () => {
+    vi.mocked(getRequestUser).mockResolvedValue({ id: "u2", email: "u2@example.com", name: "U2" })
+    vi.mocked(getWorkflow).mockResolvedValue(null)
+    const response = await POST(makeRequest(workflowPayload))
+    expect(response.status).toBe(404)
+    expect(createRun).not.toHaveBeenCalled()
+  })
+
+  it("运行记录写入失败不影响执行结果", async () => {
+    vi.mocked(getRequestUser).mockResolvedValue({ id: "u1", email: "u@example.com", name: "U" })
+    vi.mocked(getWorkflow).mockResolvedValue({ id: WORKFLOW_ID } as never)
+    vi.mocked(createRun).mockRejectedValue(new Error("db down"))
+
+    const events = await collect(await POST(makeRequest(workflowPayload)))
+    expect(completeEvent(events)).toBeDefined()
+    expect(finishRun).not.toHaveBeenCalled()
   })
 })

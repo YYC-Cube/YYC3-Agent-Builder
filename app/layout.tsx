@@ -4,7 +4,7 @@ import { I18nProvider } from "@/lib/i18n"
 import { Analytics } from "@vercel/analytics/next"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import type React from "react"
 import { Suspense } from "react"
 import "./globals.css"
@@ -32,9 +32,15 @@ export const metadata: Metadata = {
     "Gemini",
     "React Flow",
   ],
+  applicationName: "YYC³ Agent Builder",
   authors: [{ name: "YYC³ CloudPivot" }],
   creator: "YYC³ CloudPivot",
   publisher: "YYC³ CloudPivot",
+  appleWebApp: {
+    capable: true,
+    title: "YYC³",
+    statusBarStyle: "black-translucent",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -43,26 +49,19 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://agent.yyc3.vip"),
   icons: {
     icon: [
-      { url: "/yyc3/Web%20App/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/yyc3/Web%20App/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/yyc3-icons/macos/AppIcon.iconset/icon_32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/yyc3-icons/macos/AppIcon.iconset/icon_16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/yyc3-icons/android/mipmap-xxxhdpi/ic_launcher.png", sizes: "192x192", type: "image/png" },
     ],
     apple: [
-      { url: "/yyc3/Web%20App/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    other: [
       {
-        rel: "android-chrome-192",
-        url: "/yyc3/Web%20App/android-chrome-192.png",
-        sizes: "192x192",
-      },
-      {
-        rel: "android-chrome-512",
-        url: "/yyc3/Web%20App/android-chrome-512.png",
-        sizes: "512x512",
+        url: "/yyc3-icons/ios/AppIcon.appiconset/Icon-App-60x60@3x.png",
+        sizes: "180x180",
+        type: "image/png",
       },
     ],
   },
-  manifest: "/yyc3/Web%20App/site.webmanifest",
+  manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -102,13 +101,21 @@ export const metadata: Metadata = {
   generator: "YYC³ CloudPivot Intelli-Matrix",
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1020" },
+  ],
+  colorScheme: "light dark",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <I18nProvider>

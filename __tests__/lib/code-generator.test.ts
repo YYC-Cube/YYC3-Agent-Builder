@@ -1,6 +1,9 @@
 import { generateAISDKCode } from "@/lib/code-generator"
 import type { Edge, Node as XYNode } from "@xyflow/react"
 import { describe, expect, it } from "vitest"
+import { execSync } from "node:child_process"
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs"
+import { join } from "node:path"
 
 type CodeGenNode = XYNode<Record<string, any>>
 
@@ -10,6 +13,24 @@ function makeNode(id: string, type: string, data: Record<string, any> = {}): Cod
 
 function makeEdge(source: string, target: string): Edge {
   return { id: `e-${source}-${target}`, source, target } as Edge
+}
+
+function compileGeneratedCode(code: string): { ok: boolean; error?: string } {
+  const dir = mkdtempSync(join(process.cwd(), ".codegen-tmp-"))
+  const file = join(dir, "workflow.ts")
+  writeFileSync(file, code, "utf8")
+  try {
+    execSync(`npx tsc --noEmit --strict --esModuleInterop --moduleResolution node --target es2020 --module esnext --skipLibCheck "${file}"`, {
+      stdio: "pipe",
+      timeout: 60_000,
+      cwd: process.cwd(),
+    })
+    return { ok: true }
+  } catch (error: unknown) {
+    return { ok: false, error: String(error) }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
 }
 
 describe("generateAISDKCode", () => {
@@ -99,5 +120,44 @@ describe("generateAISDKCode", () => {
     const edges = [makeEdge("1", "2"), makeEdge("2", "3")]
     const code = generateAISDKCode(nodes, edges)
     expect(code).toContain("toUpperCase")
+  })
+
+  it("should generate tsc-compilable code for a full graph", () => {
+    const nodes = [
+      makeNode("1", "start"),
+      makeNode("2", "prompt", { content: "Hello $input1" }),
+      makeNode("3", "textModel", { model: "gpt-4", temperature: 0.7, maxTokens: 1000 }),
+      makeNode("4", "conditional", { condition: "input1 === 'yes'" }),
+      makeNode("5a", "end"),
+      makeNode("5b", "end"),
+      makeNode("6", "imageGeneration", { model: "gemini-2.5-flash-image" }),
+      makeNode("7", "end"),
+    ]
+    const edges = [
+      makeEdge("1", "2"),
+      makeEdge("2", "3"),
+      makeEdge("3", "4"),
+      { id: "e-4-5a", source: "4", target: "5a", sourceHandle: "true" } as Edge,
+      { id: "e-4-5b", source: "4", target: "5b", sourceHandle: "false" } as Edge,
+      makeEdge("2", "6"),
+      makeEdge("6", "7"),
+    ]
+    const code = generateAISDKCode(nodes, edges)
+    const result = compileGeneratedCode(code)
+    expect(result.ok).toBe(true)
+    if (!result.ok) {
+      console.error("tsc error:\n", result.error)
+    }
+  })
+
+  it("should generate tsc-compilable code for image generation", () => {
+    const nodes = [makeNode("1", "start"), makeNode("2", "imageGeneration", {}), makeNode("3", "end")]
+    const edges = [makeEdge("1", "2"), makeEdge("2", "3")]
+    const code = generateAISDKCode(nodes, edges)
+    const result = compileGeneratedCode(code)
+    expect(result.ok).toBe(true)
+    if (!result.ok) {
+      console.error("tsc error:\n", result.error)
+    }
   })
 })

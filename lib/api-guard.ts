@@ -46,8 +46,18 @@ function positiveInt(value: string | undefined, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
-export async function checkRequest(req: Request, now = Date.now()): Promise<GuardResult> {
-  const clientId = getClientId(req)
+export type GuardOptions = {
+  now?: number
+  /** 已通过 Better Auth 会话认证的用户；存在时跳过令牌校验，并按用户维度限流 */
+  authenticatedUserId?: string
+}
+
+export async function checkRequest(
+  req: Request,
+  options: GuardOptions | number = {},
+): Promise<GuardResult> {
+  const { now = Date.now(), authenticatedUserId } = typeof options === "number" ? { now: options } : options
+  const clientId = authenticatedUserId ? `user:${authenticatedUserId}` : getClientId(req)
   const requiredToken = process.env.WORKFLOW_API_TOKEN
 
   if (!requiredToken && !warnedMissingToken) {
@@ -57,7 +67,7 @@ export async function checkRequest(req: Request, now = Date.now()): Promise<Guar
     )
   }
 
-  if (requiredToken && !constantTimeEqual(getTokenFromRequest(req), requiredToken)) {
+  if (requiredToken && !authenticatedUserId && !constantTimeEqual(getTokenFromRequest(req), requiredToken)) {
     return {
       ok: false,
       status: 401,

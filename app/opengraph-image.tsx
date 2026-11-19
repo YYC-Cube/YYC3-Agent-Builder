@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og"
 
-export const runtime = "edge"
+// GitHub Pages 静态导出要求确定性路由显式声明 force-static
+// （OG 图为纯静态样式渲染，无动态数据；不声明 edge runtime，避免与
+//   force-static 不兼容的警告，静态化后 Vercel 生产路径行为等价）
+export const dynamic = "force-static"
 export const alt = "AI Agent Builder - Visual workflow builder for AI SDK"
 export const size = {
   width: 1200,

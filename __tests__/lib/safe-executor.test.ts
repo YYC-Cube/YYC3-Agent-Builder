@@ -1,5 +1,5 @@
-import { safeExecute, validateUserCode } from "@/lib/safe-executor"
-import { describe, expect, it } from "vitest"
+import { isCodeExecutionEnabled, safeExecute, validateUserCode } from "@/lib/safe-executor"
+import { afterEach, describe, expect, it } from "vitest"
 
 describe("safeExecute — P0 顶层 return 修复", () => {
   it("支持显式 return 语句", () => {
@@ -51,5 +51,17 @@ describe("safeExecute — 安全护栏", () => {
 
   it("validateUserCode 接受合法代码", () => {
     expect(() => validateUserCode("return input1 + 1", "T")).not.toThrow()
+  })
+})
+
+describe("safeExecute — 默认熔断", () => {
+  afterEach(() => {
+    process.env.ENABLE_UNSAFE_CODE_NODES = "true"
+  })
+
+  it("未显式开启时拒绝执行任何用户代码", () => {
+    delete process.env.ENABLE_UNSAFE_CODE_NODES
+    expect(isCodeExecutionEnabled()).toBe(false)
+    expect(() => safeExecute("return 1 + 1", [], "JavaScript")).toThrow(/disabled/)
   })
 })

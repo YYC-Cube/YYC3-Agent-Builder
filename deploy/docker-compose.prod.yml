@@ -23,6 +23,7 @@ services:
       HOSTNAME: 0.0.0.0
       LOG_LEVEL: ${LOG_LEVEL:-info}
       REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
       WORKFLOW_API_TOKEN: ${WORKFLOW_API_TOKEN:?WORKFLOW_API_TOKEN is required}
     ports:
       # 只监听 Tailscale 地址；ECS 通过 tailnet 访问
