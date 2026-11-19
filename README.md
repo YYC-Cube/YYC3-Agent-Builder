@@ -1,21 +1,3 @@
----
-file: README.md
-title: YYC³ Agent Builder — 开源级项目 README
-description: YYC³ Agent Builder 可视化 AI 工作流编排平台的开源级项目文档，包含品牌、徽章、技术栈、快速开始、核心功能、文档架构、社区协作等。
-author: YYC³ Team <admin@0379.email>
-version: v1.1.0
-created: 2026-11-01
-updated: 2026-11-20
-status: stable
-tags: [readme, project, overview, opensource]
-category: general
-language: zh-CN
-audience: developers, maintainers, users
-complexity: basic
-license: MIT
-copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
----
-
 # YYC³ Agent Builder — Visual AI Workflow Builder
 
 **CloudPivot Intelli-Matrix** · 言启千行代码，语枢万物智能
@@ -53,7 +35,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ## 🚀 快速导航
 
 | 章节 | 内容 |
-|------|------|
+| ------ | ------ |
 | [✨ 概述](#-概述) | 项目定位、品牌标语与核心能力 |
 | [🎨 视觉设计系统](#-视觉设计系统) | 可视化交互体系与设计语言 |
 | [📚 文档架构](#-文档架构) | 开源级文档地图与变更追溯 |
@@ -90,7 +72,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ### 品牌标识
 
 | 场景 | 写法 | 示例 |
-|------|------|------|
+| ------ | ------ | ------ |
 | 正文、标题、示例名称 | `YYC³` | `YYC³ Agent Builder` |
 | 首次出现（标头/版权行） | `YYC³（YanYuCloudCube™ 注册商标）` | `YYC³（YanYuCloudCube™ · 注册商标）` |
 | 文件名、目录名、包名、代码标识 | `YYC³`（ASCII） | `yyc3-agent-builder` |
@@ -105,7 +87,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ### 设计语言
 
 | 维度 | 实现 | 说明 |
-|------|------|------|
+| ------ | ------ | ------ |
 | 布局框架 | shadcn/ui（new-york 风格） | 56 个 Radix UI 原语组件 |
 | 样式系统 | Tailwind CSS v4 + oklch 色彩系统 | 原子化 CSS，设计系统统一 |
 | 主题 | 暗色/浅色（next-themes） | oklch 色深色主题变量 |
@@ -129,7 +111,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ### 文档地图
 
 | 文档 | 用途 | 状态 |
-|------|------|------|
+| ------ | ------ | ------ |
 | [CHANGELOG.md](./CHANGELOG.md) | 项目级版本变更日志 | stable |
 | [docs/README.md](./docs/README.md) | 文档中心索引 | stable |
 | [docs/YYC3-文档与日志机制规范.md](./docs/YYC3-文档与日志机制规范.md) | 上下文存档、执行日志、运行时日志机制 | stable |
@@ -147,7 +129,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ### 社区协作文档
 
 | 文档 | 用途 |
-|------|------|
+| ------ | ------ |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 开源级贡献指南——问题提交、代码贡献、审查与发布流程 |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | 社区行为准则——无骚扰、包容的参与规范 |
 | [SECURITY.md](./SECURITY.md) | 安全政策——漏洞披露与安全响应流程 |
@@ -157,7 +139,7 @@ copyright: Copyright (c) 2026 YanYuCloudCube™（YYC³）
 ## 🛠️ 技术栈
 
 | 类别 | 技术 | 版本 | 说明 |
-|------|------|------|------|
+| ------ | ------ | ------ | ------ |
 | **框架** | [Next.js](https://nextjs.org) (App Router) | 16.4.5 | React 全栈框架 |
 | **UI 引擎** | [React](https://react.dev) | 19.1.0 | 声明式 UI |
 | **组件库** | [shadcn/ui](https://ui.shadcn.com) (new-york) | — | 56 个 Radix UI 组件 |
@@ -314,7 +296,7 @@ pnpm build         # Next.js build — 0 errors
 ### 工作流节点（12 种）
 
 | 节点 | 标识 | 说明 | 执行引擎 |
-|------|------|------|----------|
+| ------ | ------ | ------ | ---------- |
 | **Start** | `start` | 工作流入口 | 返回 "Workflow started" |
 | **End** | `end` | 工作流出口 | 透传上游输出 |
 | **Prompt** | `prompt` | 文本模板，支持 `$input1` 变量 | 变量插值 |
@@ -333,7 +315,7 @@ pnpm build         # Next.js build — 0 errors
 ### 特性矩阵
 
 | 特性 | 状态 |
-|------|------|
+| ------ | ------ |
 | 拖拽式编排 | ✅ v0.1.0 |
 | NDJSON 流式执行 | ✅ v0.1.0 |
 | 代码导出 | ✅ v0.1.0 |
@@ -361,7 +343,7 @@ pnpm build         # Next.js build — 0 errors
 ### 代码质量
 
 | 指标 | 结果 | 标准 |
-|------|------|------|
+| ------ | ------ | ------ |
 | TypeScript 编译错误 | **0** ✅ | strict mode |
 | ESLint Warnings | **0** ✅ | --max-warnings 0 |
 | 测试通过数 | **286/286** ✅ | vitest 5.1.0 |
@@ -371,7 +353,7 @@ pnpm build         # Next.js build — 0 errors
 ### 项目规模
 
 | 度量 | 值 |
-|------|-----|
+| ------ | ----- |
 | 源代码行数（`app/components/lib/hooks` TS+TSX） | 13,228 |
 | 测试代码行数（`__tests__` TS+TSX） | 2,867 |
 | SQL 迁移行数 | 131 |
@@ -399,7 +381,7 @@ pnpm build         # Next.js build — 0 errors
 10 种语言支持，翻译文件位于 `public/locales/{lang}/common.json`。
 
 | 语言 | 代码 | 方向 | 状态 |
-|------|------|------|------|
+| ------ | ------ | ------ | ------ |
 | English | `en` | LTR | ✅ |
 | 简体中文 | `zh-CN` | LTR | ✅ |
 | 繁體中文 | `zh-TW` | LTR | ✅ |
@@ -418,7 +400,7 @@ pnpm build         # Next.js build — 0 errors
 ### 环境变量
 
 | 变量 | 说明 | 必需 |
-|------|------|------|
+| ------ | ------ | ------ |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Google AI API Key（Gemini 模型/图像生成） | ✅ |
 | `OPENAI_API_KEY` | OpenAI API Key（GPT 模型/TTS/Embeddings） | ⚠️ 按需 |
 | `ANTHROPIC_API_KEY` | Anthropic API Key（Claude 模型） | ⚠️ 按需 |
@@ -469,7 +451,7 @@ ignores: ["coverage/**", "__tests__/coverage/**", ".next/**"];
 ### 安全基线
 
 | 能力 | 实现 | 状态 |
-|------|------|------|
+| ------ | ------ | ------ |
 | 执行 API 鉴权 | `WORKFLOW_API_TOKEN` + 定时常数时间比较 | ✅ 已接入 |
 | 限流 | 单实例内存滑动窗口（默认 20 次/60s/IP） | ✅ 已接入 |
 | SSRF 防护 | DNS 解析后逐 IP 判定、禁重定向、方法白名单 | ✅ 已加固 |
@@ -484,7 +466,7 @@ ignores: ["coverage/**", "__tests__/coverage/**", ".next/**"];
 `app/api/*` 为 **动态 Node 路由**（构建输出 `ƒ`）。**GitHub Pages 仅能托管静态资源，无法运行执行引擎**；`public/CNAME` 中的 `agent.yyc3.vip` 仅用于域名指向，不代表可部署在 Pages。
 
 | 路径 | 状态 | 说明 |
-|------|------|------|
+| ------ | ------ | ------ |
 | **Docker + standalone** | ✅ 主方案 | `output: "standalone"` + `Dockerfile` + `GET /api/health`；已实测 `node server.js` 运行 |
 | Vercel | ✅ 备选 | 原生支持 Route Handler / SSE，`maxDuration=30` |
 | GitHub Pages | ❌ 排除 | 无 Node runtime、无 Route Handler、无 SSE |
@@ -509,7 +491,7 @@ docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
 ## 📚 文档与变更
 
 | 文档 | 用途 |
-|------|------|
+| ------ | ------ |
 | [CHANGELOG.md](./CHANGELOG.md) | 项目级版本变更日志 |
 | [docs/README.md](./docs/README.md) | 文档中心索引 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 开源级贡献指南 |
@@ -537,14 +519,14 @@ jobs:
 ## 🤝 社区协作
 
 | 文档 | 用途 |
-|------|------|
+| ------ | ------ |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 贡献指南——问题提交、代码贡献、审查与发布流程 |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | 行为准则——无骚扰、包容的参与规范 |
 | [SECURITY.md](./SECURITY.md) | 安全政策——漏洞披露与安全响应流程 |
 
-问题与建议：[GitHub Issues](https://github.com/YYC-Cube/YYC3-Agent-Builder/issues)  
-行为准则举报：`admin@0379.email`  
-官方站点：https://agent.yyc3.vip
+问题与建议：[GitHub Issues](https://github.com/YYC-Cube/YYC3-Agent-Builder/issues)
+行为准则举报：`admin@0379.email`
+官方站点：<https://agent.yyc3.vip>
 
 ---
 
