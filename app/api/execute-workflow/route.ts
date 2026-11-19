@@ -13,6 +13,34 @@ const MAX_NODES = 200
 const MAX_EDGES = 500
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
+export function validateUrl(url: string): void {
+  try {
+    const parsed = new URL(url)
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      throw new Error(`Forbidden protocol: ${parsed.protocol}`)
+    }
+    const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "")
+    const isBlockedHost =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "::1" ||
+      hostname === "::" ||
+      hostname.startsWith("192.168.") ||
+      hostname.startsWith("10.") ||
+      hostname.startsWith("172.") ||
+      hostname.startsWith("169.254.") ||
+      hostname.startsWith("fc00:") ||
+      hostname.startsWith("fd00:") ||
+      hostname.startsWith("fe80:")
+    if (isBlockedHost) {
+      throw new Error("SSRF protection: Private, loopback, link-local or metadata addresses are not allowed")
+    }
+  } catch (e: any) {
+    if (e.message.includes("SSRF") || e.message.includes("Forbidden")) throw e
+    throw new Error(`Invalid URL: ${url}`)
+  }
+}
+
 /**
  * 统一执行超时预算：Next.js Route Handler 的 maxDuration=30s，单个 AI 调用 25s。
  * 若图中节点数较多，累计可能超过 30s；生产部署时应按实际节点数/并发度在部署平台
