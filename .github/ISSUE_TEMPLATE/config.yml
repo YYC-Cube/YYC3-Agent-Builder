@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: YYC³ 社区行为准则举报
+    url: mailto:admin@0379.email
+    about: 请通过此渠道报告行为准则违规事件。
+  - name: 安全漏洞报告
+    url: mailto:admin@0379.email
+    about: 请勿在公开 Issue 中披露安全漏洞，通过邮件私密报告。

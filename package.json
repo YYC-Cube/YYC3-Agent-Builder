@@ -3,6 +3,42 @@
   "version": "0.1.2",
   "private": true,
   "packageManager": "pnpm@10.17.0",
+  "description": "YYC³ Agent Builder — Visual AI Workflow Builder. Drag-and-drop AI workflow orchestration with Next.js 16, React 19, Vercel AI SDK 7, and React Flow.",
+  "author": "YYC³ Team <admin@0379.email>",
+  "license": "MIT",
+  "homepage": "https://github.com/YYC-Cube/YYC3-Agent-Builder#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YYC-Cube/YYC3-Agent-Builder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YYC-Cube/YYC3-Agent-Builder/issues"
+  },
+  "keywords": [
+    "yyc3",
+    "agent-builder",
+    "visual-ai-workflow",
+    "nextjs",
+    "react",
+    "react-flow",
+    "ai-sdk",
+    "workflow-orchestration",
+    "drizzle-orm",
+    "better-auth",
+    "shadcn-ui",
+    "radix-ui",
+    "tailwindcss",
+    "typescript",
+    "pnpm",
+    "visual-ai",
+    "workflow-engine",
+    "node-sandbox",
+    "conditional-branch"
+  ],
+  "funding": {
+    "type": "email",
+    "url": "mailto:admin@0379.email"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev --port 3146",
