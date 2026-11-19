@@ -2,6 +2,10 @@ import "@testing-library/jest-dom/vitest"
 import { ReadableStream } from "node:stream/web"
 import { TextDecoder, TextEncoder } from "node:util"
 
+// 测试默认开启 VM 兼容通道，以覆盖历史代码路径；
+// 安全默认值（关闭）由 safe-executor / expression-evaluator 用例显式验证。
+process.env.ENABLE_UNSAFE_CODE_NODES = "true"
+
 // jsdom 不提供 Web Streams / TextEncoder，API 路由测试需要这些运行时能力
 if (typeof globalThis.ReadableStream === "undefined") {
   Object.defineProperty(globalThis, "ReadableStream", { value: ReadableStream, configurable: true })

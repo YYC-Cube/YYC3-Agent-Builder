@@ -19,7 +19,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white&labelColor=222)]()
 [![Vercel AI SDK](https://img.shields.io/badge/AI_SDK-7.0.142-000?logo=vercel&logoColor=white&labelColor=222)]()
 
-[![Tests](https://img.shields.io/badge/Tests-227_passed-22C55E?logo=vitest&logoColor=white&labelColor=222)]()
+[![Tests](https://img.shields.io/badge/Tests-259_passed-22C55E?logo=vitest&logoColor=white&labelColor=222)]()
 [![TypeScript](https://img.shields.io/badge/tsc-0_errors-22C55E?logo=typescript&logoColor=white&labelColor=222)]()
 [![ESLint](https://img.shields.io/badge/ESLint-0_warnings-22C55E?logo=eslint&logoColor=white&labelColor=222)]()
 [![Build](https://img.shields.io/badge/Build-passing-22C55E?logo=next.js&logoColor=white&labelColor=222)]()
@@ -177,9 +177,12 @@ sequenceDiagram
 yyc3-agent-builder/
 ├── app/                          # Next.js App Router
 │   ├── api/
+│   │   ├── auth/[...all]/        # Better Auth 登录/注册/会话
+│   │   ├── workflows/            # 工作流 CRUD（列表/创建/单条）
 │   │   ├── demo-country/         # 演示 API
-│   │   ├── execute-workflow/     # 执行 API（鉴权 + 校验 + SSE 壳）
+│   │   ├── execute-workflow/     # 执行 API（鉴权 + 校验 + SSE + 运行落库）
 │   │   └── health/               # 容器健康检查
+│   ├── login/page.tsx            # 邮箱密码登录/注册
 │   ├── globals.css               # 全局样式 + oklch 主题变量
 │   ├── layout.tsx                # 根布局（元数据 + Provider）
 │   ├── opengraph-image.tsx       # OG 图片生成
@@ -207,6 +210,13 @@ yyc3-agent-builder/
 │   ├── node-palette.tsx          # 拖拽节点面板
 │   └── theme-provider.tsx        # 暗色主题（next-themes）
 ├── lib/
+│   ├── db/                       # Drizzle schema + 主/只读连接池
+│   │   ├── schema.ts             # Better Auth 四表 + workflows/runs/run_events
+│   │   └── index.ts              # postgres.js 连接（prepare:false）
+│   ├── workflows/                # 工作流校验 + 数据访问（归属隔离）
+│   ├── runs/                     # 运行记录与事件写入
+│   ├── auth.ts                   # Better Auth 服务端实例
+│   ├── auth-client.ts            # 浏览器端 auth client
 │   ├── i18n/                     # 国际化引擎
 │   │   ├── config.ts             # 10 语言配置 + RTL
 │   │   ├── provider.tsx          # I18nProvider + useI18n
@@ -252,6 +262,10 @@ yyc3-agent-builder/
 ├── deploy/
 │   ├── docker-compose.prod.yml   # NAS 编排（app + Redis + 健康检查）
 │   └── .env.production.example   # 生产环境模板（PG15 主备 5433 占位）
+├── db/
+│   ├── migrations/               # drizzle-kit 生成的 SQL 迁移（含触发器）
+│   └── README.md                 # 迁移命令与原则
+├── drizzle.config.ts             # 迁移配置
 └── CHANGELOG.md                  # 项目级变更日志
 ```
 
@@ -286,6 +300,11 @@ pnpm build
 pnpm test                    # 全部测试
 pnpm test:watch              # 监听模式
 pnpm test:coverage           # 覆盖率报告
+
+# 6. 数据库迁移（阶段 A）
+pnpm db:generate             # 由 schema 生成迁移
+pnpm db:check                # 校验迁移链
+pnpm db:migrate              # 应用迁移（需 DATABASE_URL）
 ```
 
 ### 测试验证（质量门禁）
@@ -295,7 +314,7 @@ pnpm test:coverage           # 覆盖率报告
 ```bash
 pnpm lint          # ESLint — 0 warnings
 npx tsc --noEmit   # TypeScript — 0 errors
-pnpm test          # Vitest — 227/227 passed（19 个测试文件）
+pnpm test          # Vitest — 259/259 passed（25 个测试文件）
 pnpm build         # Next.js build — 0 errors
 ```
 
@@ -344,7 +363,15 @@ pnpm build         # Next.js build — 0 errors
 | Audio / Embedding / Structured Output 真实现 | ✅ v0.1.2（AI SDK 7 `generateSpeech` / `embed` / `Output.*`） |
 | 执行引擎可复用内核 | ✅ v0.1.2（`lib/workflow-engine` 抽离） |
 | 容器化部署 | ✅ v0.1.2（standalone + Dockerfile + `/api/health`） |
-| 工作流持久化 / 账号体系 | 📐 已定方案（Postgres + Drizzle + Better Auth），未建表 |
+| 工作流持久化 / 账号体系 | ✅ 阶段 A/B：Better Auth 登录、工作流 CRUD、执行写 runs/run_events |
+| 明/暗主题 | ✅ 头部与认证页 ThemeToggle；浅色/深色变量完整 |
+| 品牌 Logo | ✅ 画布/登录/找回/重置/验证/404 + favicon/manifest/PWA |
+| 登录页视觉 | ✅ 全屏背景 + 桌面端右侧自适应登录卡 |
+| 云端保存 / 加载 | ✅ 头部「云端」菜单（未登录引导 `/login`） |
+| 邮箱验证 | ✅ 注册后强制验证；`/verify-email` 自定义落地页 |
+| 找回密码 | ✅ `/forgot-password` → 邮件链接 → `/reset-password`；重置后吊销其它会话 |
+| 登录防爆破 | ✅ 登录 10/60s、注册 5/60s、重置/重发 5/60s |
+| 运行事件回放 | ✅ `run_events` 按 `(run_id, seq)` 落库；回放 UI 待做 |
 
 ---
 
@@ -356,8 +383,8 @@ pnpm build         # Next.js build — 0 errors
 |------|------|------|
 | TypeScript 编译错误 | **0** ✅ | strict mode |
 | ESLint Warnings | **0** ✅ | --max-warnings 0 |
-| 测试通过数 | **227/227** ✅ | vitest 5.0.1 |
-| 测试文件 | **19** | lib / components / api 三层覆盖 |
+| 测试通过数 | **259/259** ✅ | vitest 5.1.0 |
+| 测试文件 | **25** | lib / components / api 三层覆盖 |
 | 生产构建 | **通过** ✅ | `pnpm build`（standalone） |
 | 生产黑盒 | **9/9 通过** ✅ | 401/429、条件分支、SSRF、沙箱、health、standalone 运行 |
 
@@ -365,8 +392,9 @@ pnpm build         # Next.js build — 0 errors
 
 | 度量 | 值 |
 |------|-----|
-| 源代码行数（`app/components/lib/hooks` TS+TSX） | 11,285 |
-| 测试代码行数（`__tests__` TS+TSX） | 2,446 |
+| 源代码行数（`app/components/lib/hooks` TS+TSX） | 13,228 |
+| 测试代码行数（`__tests__` TS+TSX） | 2,867 |
+| SQL 迁移行数 | 131 |
 | 业务组件 | 19 |
 | UI 组件（shadcn/ui） | 56 |
 | Node 节点 | 12 |
@@ -421,9 +449,13 @@ pnpm build         # Next.js build — 0 errors
 | `WORKFLOW_RATE_LIMIT_WINDOW_MS` | 限流窗口（毫秒），默认 `60000` | ⚠️ 可选 |
 | `WORKFLOW_HTTP_TIMEOUT_MS` | 出站 HTTP 超时（毫秒），默认 `10000` | ⚠️ 可选 |
 | `WORKFLOW_HTTP_MAX_BYTES` | 出站响应体上限（字节），默认 `1048576` | ⚠️ 可选 |
+| `ENABLE_UNSAFE_CODE_NODES` | 不可信代码执行开关，默认 `false`；开启后 `javascript`/`tool` 节点可用，`conditional` 仍建议使用受限表达式 | ⚠️ 仅可信内网 |
 | `REDIS_URL` | 本地/自建 Redis（NAS compose 内置，优先级最高） | NAS 部署必配 |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN` | 托管多实例共享限流（兼容 `KV_REST_API_*`） | 托管必配 |
-| `DATABASE_URL` / `DATABASE_REPLICA_URL` | PG15 主备（5433），阶段 A 接入后启用 | 待启用 |
+| `DATABASE_URL` / `DATABASE_REPLICA_URL` | PG15 主备（5433） | ✅ 阶段 A 起启用 |
+| `BETTER_AUTH_SECRET` | 会话签名密钥（`openssl rand -base64 32`） | ✅ 生产必配 |
+| `BETTER_AUTH_URL` / `NEXT_PUBLIC_APP_URL` | 站点地址（登录回调/Cookie） | ✅ 生产必配 |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | 验证/重置邮件；未配置时开发打印预览，生产报错 | ✅ 生产必配 |
 | `RATE_LIMIT_FAIL_MODE` | Redis 异常策略：`open`（默认）/ `closed` | ⚠️ 可选 |
 | `LOG_LEVEL` | `debug / info / warn / error / silent`，默认 `info` | ⚠️ 可选 |
 | `PORT` / `HOSTNAME` | 容器监听端口与地址（镜像内默认 `3000` / `0.0.0.0`） | 容器内 |
@@ -461,7 +493,7 @@ ignores: ["coverage/**", "__tests__/coverage/**", ".next/**"];
 | 执行 API 鉴权 | `WORKFLOW_API_TOKEN` + 定时常数时间比较 | 前端令牌非会话级凭证，生产建议改为登录态鉴权 |
 | 限流 | 单实例内存滑动窗口（默认 20 次/60s/IP） | 多实例需外置 Redis |
 | SSRF | DNS 解析后逐 IP 判定、禁重定向、方法白名单 | DNS rebinding TOCTOU → 配合出口防火墙白名单 |
-| 沙箱 | VM 双模式、5s 硬超时、无宿主内置对象注入 | 用户代码执行仍需平台级资源隔离 |
+| 沙箱 | 默认熔断：`javascript`/`tool` 需显式 `ENABLE_UNSAFE_CODE_NODES=true`；`conditional` 走受限表达式求值（无 eval/Function/全局对象） | `node:vm` 不是安全边界，公网多租户必须改用进程级/独立沙箱 |
 | 出站请求 | 10s 超时 + 1 MiB 响应上限 | 大流量场景需压测调参 |
 | 日志 | JSON Lines + 敏感字段脱敏 | 不记录完整 payload 与模型响应正文 |
 
@@ -486,7 +518,9 @@ docker build -t yyc3-agent-builder:0.1.2 .
 docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
 ```
 
-生产必配 `WORKFLOW_API_TOKEN`；NAS 部署使用内置 Redis（`REDIS_URL`），托管多实例使用 `UPSTASH_REDIS_REST_URL/TOKEN`；公网入口由 ECS `yyc3-33` 反代并关闭 SSE 缓冲。完整落位、PG15 主备方向与数据盘选型见 [集群拓扑与部署映射](./docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md)，操作步骤见 [生产部署定案与运行手册](./docs/05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md)。
+生产必配 `WORKFLOW_API_TOKEN`；NAS 部署使用内置 Redis（`REDIS_URL`），托管多实例使用 `UPSTASH_REDIS_REST_URL/TOKEN`；公网入口由 ECS `yyc3-33` 反代并关闭 SSE 缓冲。
+
+**数据库（已定案）**：PG15 **NAS `100.65.172.88:5433` 主、Mac `100.87.159.21:5433` 备**（两台主机各监听 5433）。切换与演练见 [PG15 主备切换与演练手册](./docs/06-运维保障阶段/0601-运维策略/005-PG15主备切换与演练手册.md)；完整落位与数据盘选型见 [集群拓扑与部署映射](./docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md)，操作步骤见 [生产部署定案与运行手册](./docs/05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md)。
 
 ---
 
@@ -502,6 +536,10 @@ docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
 | [docs/04-测试审核阶段/0402-质量审核/003-首次全量回归测试报告.md](./docs/04-测试审核阶段/0402-质量审核/003-首次全量回归测试报告.md) | 全量回归测试结论 |
 | [生产部署定案与运行手册](./docs/05-交付部署阶段/0502-部署方案/003-生产部署定案与运行手册.md) | Docker/Vercel 部署、反代与 SSE |
 | [可观测性与运行日志手册](./docs/06-运维保障阶段/0601-运维策略/003-可观测性与运行日志手册.md) | 日志契约、指标、排障 |
+| [集群拓扑与部署映射](./docs/06-运维保障阶段/0601-运维策略/004-集群拓扑与部署映射.md) | 七节点落位、PG 主备 |
+| [PG15 主备切换与演练手册](./docs/06-运维保障阶段/0601-运维策略/005-PG15主备切换与演练手册.md) | switchover / failover / pg_rewind |
+| [PGDATA 迁移至 V3 执行单](./docs/06-运维保障阶段/0601-运维策略/006-PGDATA迁移至V3执行单.md) | rsync / pg_basebackup / initdb 与回滚 |
+| [持久化阶段 A 建表与阶段 B 接入说明](./docs/agent-builder-hunyuan-20261111/05-持久化阶段A建表说明.md) | schema、迁移、登录、CRUD 与执行落库 |
 | [执行引擎安全基线与 SSRF 加固](./docs/07-合规安全保障/0701-安全管理/003-执行引擎安全基线与SSRF加固.md) | 威胁模型与控制矩阵 |
 
 ---

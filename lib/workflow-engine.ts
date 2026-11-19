@@ -15,8 +15,9 @@ import { openai } from "@ai-sdk/openai"
 import type { Edge, Node } from "@xyflow/react"
 import { embed, generateImage, generateSpeech, generateText, jsonSchema, Output } from "ai"
 import { createLogger, getErrorMessage } from "@/lib/logger"
+import { evaluateExpression } from "@/lib/expression-evaluator"
 import { resolveModel } from "@/lib/model-resolver"
-import { safeExecute } from "@/lib/safe-executor"
+import { isCodeExecutionEnabled, safeExecute } from "@/lib/safe-executor"
 import { fetchExternal } from "@/lib/url-guard"
 
 const MAX_GRAPH_DEPTH = 100
@@ -199,7 +200,9 @@ export async function executeWorkflow({
           const conditionInputs = inputs
 
           try {
-            const result = safeExecute(`return ${conditionCode}`, conditionInputs, "Conditional")
+            const result = isCodeExecutionEnabled()
+              ? safeExecute(`return ${conditionCode}`, conditionInputs, "Conditional")
+              : evaluateExpression(conditionCode, conditionInputs)
             output = Boolean(result)
           } catch (condError: unknown) {
             throw new Error(`Conditional evaluation error: ${getErrorMessage(condError)}`)
