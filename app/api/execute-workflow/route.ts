@@ -1,5 +1,8 @@
 import { checkRequest } from "@/lib/api-guard"
+import { getRequestUser } from "@/lib/auth"
 import { createLogger, getErrorMessage } from "@/lib/logger"
+import { appendRunEvent, createRun, finishRun } from "@/lib/runs/repository"
+import { getWorkflow } from "@/lib/workflows/repository"
 import { executeWorkflow, type StreamUpdate } from "@/lib/workflow-engine"
 import type { Edge, Node } from "@xyflow/react"
 
@@ -8,6 +11,7 @@ export const maxDuration = 30
 const MAX_BODY_BYTES = 512_000
 const MAX_NODES = 200
 const MAX_EDGES = 500
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function jsonError(message: string, status: number, log: ReturnType<typeof createLogger>): Response {
   log.warn("invalid request", { status, message })
@@ -19,8 +23,9 @@ function jsonError(message: string, status: number, log: ReturnType<typeof creat
 
 export async function POST(req: Request) {
   const log = createLogger("execute-workflow")
+  const user = await getRequestUser(req)
 
-  const guard = await checkRequest(req)
+  const guard = await checkRequest(req, { authenticatedUserId: user?.id })
   if (!guard.ok) {
     log.warn("request rejected", { status: guard.status, clientId: guard.clientId })
     const headers: Record<string, string> = { "Content-Type": "application/json" }
@@ -33,13 +38,15 @@ export async function POST(req: Request) {
 
   let nodes: Node[]
   let edges: Edge[]
+  let workflowId: string | undefined
+
   try {
     const rawBody = await req.text()
     if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
       return jsonError("Request body too large", 413, log)
     }
     const payload: unknown = JSON.parse(rawBody)
-    const parsed = payload as { nodes?: unknown; edges?: unknown }
+    const parsed = payload as { nodes?: unknown; edges?: unknown; workflowId?: unknown }
     if (!Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
       return jsonError("Invalid workflow payload: nodes/edges must be arrays", 400, log)
     }
@@ -48,6 +55,26 @@ export async function POST(req: Request) {
     }
     nodes = parsed.nodes as Node[]
     edges = parsed.edges as Edge[]
+
+    if (parsed.workflowId !== undefined) {
+      if (typeof parsed.workflowId !== "string" || !UUID_PATTERN.test(parsed.workflowId)) {
+        return jsonError("Invalid workflowId", 400, log)
+      }
+      if (!user) {
+        return jsonError("Unauthorized: login required to bind a workflow", 401, log)
+      }
+      let owned: Awaited<ReturnType<typeof getWorkflow>>
+      try {
+        owned = await getWorkflow(parsed.workflowId, user.id)
+      } catch (error) {
+        log.error("workflow lookup failed", { error: getErrorMessage(error) })
+        return jsonError("Workflow storage unavailable", 503, log)
+      }
+      if (!owned) {
+        return jsonError("Workflow not found", 404, log)
+      }
+      workflowId = parsed.workflowId
+    }
   } catch (error) {
     return jsonError(`Invalid JSON body: ${getErrorMessage(error)}`, 400, log)
   }
@@ -56,24 +83,66 @@ export async function POST(req: Request) {
     nodeCount: nodes.length,
     edgeCount: edges.length,
     clientId: guard.clientId,
+    userId: user?.id,
+    workflowId,
   })
 
   const encoder = new TextEncoder()
   const stream = new ReadableStream({
     async start(controller) {
+      let runId: string | null = null
+      if (workflowId && user) {
+        try {
+          runId = await createRun({ workflowId, userId: user.id })
+        } catch (error) {
+          log.warn("failed to create run record", { error: getErrorMessage(error) })
+        }
+      }
+
+      let seq = 0
+      let persistQueue: Promise<void> = Promise.resolve()
+
+      const persist = (update: StreamUpdate) => {
+        if (!runId) return
+        const activeRunId = runId
+        const currentSeq = ++seq
+        persistQueue = persistQueue
+          .then(() => appendRunEvent(activeRunId, currentSeq, update))
+          .catch((error: unknown) => {
+            log.warn("failed to persist run event", { error: getErrorMessage(error) })
+          })
+      }
+
       const sendUpdate = (update: StreamUpdate) => {
         controller.enqueue(encoder.encode(JSON.stringify(update) + "\n"))
+        persist(update)
       }
 
       try {
         const executionLog = await executeWorkflow({ nodes, edges, onUpdate: sendUpdate })
-        log.info("workflow execution completed", { executedNodes: executionLog.length })
+        log.info("workflow execution completed", { executedNodes: executionLog.length, runId })
         sendUpdate({ type: "complete", executionLog })
+        await persistQueue
+        if (runId) {
+          try {
+            await finishRun(runId, "succeeded")
+          } catch (error) {
+            log.warn("failed to mark run succeeded", { error: getErrorMessage(error) })
+          }
+        }
         controller.close()
       } catch (error: unknown) {
         const message = getErrorMessage(error)
-        log.error("workflow execution failed", { error: message })
+        log.error("workflow execution failed", { error: message, runId })
         sendUpdate({ type: "error", error: message })
+        await persistQueue
+        if (runId) {
+          try {
+            await finishRun(runId, "failed", message)
+          } catch (finishError) {
+            log.warn("failed to mark run failed", { error: getErrorMessage(finishError) })
+          }
+        }
         controller.close()
       }
     },

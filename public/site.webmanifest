@@ -1,0 +1,31 @@
+{
+  "name": "YYC³ Agent Builder",
+  "short_name": "YYC³",
+  "description": "YYC³ CloudPivot Intelli-Matrix — Visual AI Workflow Builder",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#3b5bff",
+  "icons": [
+    {
+      "src": "/yyc3-icons/android/mipmap-xxxhdpi/ic_launcher.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/yyc3-icons/android/playstore-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/yyc3-icons/ios/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

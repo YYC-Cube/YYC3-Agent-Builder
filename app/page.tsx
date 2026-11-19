@@ -2,7 +2,9 @@
 
 import type React from "react"
 
+import { BrandLogo } from "@/components/brand-logo"
 import { LanguageSwitcher } from "@/components/language-switcher"
+import { ThemeToggle } from "@/components/theme-toggle"
 import AudioNode from "@/components/nodes/audio-node"
 import ConditionalNode from "@/components/nodes/conditional-node"
 import EmbeddingModelNode from "@/components/nodes/embedding-model-node"
@@ -32,9 +34,10 @@ import {
   type ReactFlowInstance
 } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { Code2, Download, Menu, Play, Sparkles, Upload, X } from "lucide-react"
+import { Code2, Download, Menu, Play, Upload, X } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 
+import { CloudWorkflows } from "@/components/cloud-workflows"
 import { CodeExportDialog } from "@/components/code-export-dialog"
 import { ExecutionPanel } from "@/components/execution-panel"
 import { NodeConfigPanel } from "@/components/node-config-panel"
@@ -173,6 +176,7 @@ export default function AgentBuilder() {
   const [showCodeExport, setShowCodeExport] = useState(false)
   const [showExecution, setShowExecution] = useState(false)
   const [runToken, setRunToken] = useState(0)
+  const [cloudWorkflowId, setCloudWorkflowId] = useState<string | null>(null)
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
   const nodeIdCounter = useRef(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -342,9 +346,7 @@ export default function AgentBuilder() {
           >
             {isPaletteOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <BrandLogo size={40} priority className="shadow-sm ring-1 ring-border" />
           <div>
             <h1 className="text-lg font-semibold text-foreground md:text-xl">{t("app.title")}</h1>
             <p className="text-xs text-muted-foreground md:text-sm">{t("app.subtitle")}</p>
@@ -371,6 +373,18 @@ export default function AgentBuilder() {
             <Code2 className="mr-2 h-4 w-4" />
             {t("toolbar.export")}
           </Button>
+          <CloudWorkflows
+            graph={{ nodes, edges }}
+            workflowId={cloudWorkflowId}
+            onWorkflowIdChange={setCloudWorkflowId}
+            onLoad={(cloudGraph) => {
+              setNodes(cloudGraph.nodes)
+              setEdges(cloudGraph.edges)
+              setSelectedNode(null)
+              setIsPaletteOpen(false)
+            }}
+          />
+          <ThemeToggle />
           <LanguageSwitcher />
           <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={handleRun}>
             <Play className="mr-2 h-4 w-4" />
@@ -432,6 +446,7 @@ export default function AgentBuilder() {
             onNodeStatusChange={handleNodeStatusChange}
             onNodeOutputChange={handleNodeOutputChange}
             autoRunToken={runToken}
+            workflowId={cloudWorkflowId}
           />
         )}
       </div>

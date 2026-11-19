@@ -25,9 +25,19 @@ type ExecutionPanelProps = {
   onNodeStatusChange?: (nodeId: string, status: "idle" | "running" | "completed" | "error") => void
   onNodeOutputChange?: (nodeId: string, output: unknown) => void
   autoRunToken?: number
+  /** 已保存的云端工作流 ID；存在时执行结果会写入 runs/run_events */
+  workflowId?: string | null
 }
 
-export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNodeOutputChange, autoRunToken }: ExecutionPanelProps) {
+export function ExecutionPanel({
+  nodes,
+  edges,
+  onClose,
+  onNodeStatusChange,
+  onNodeOutputChange,
+  autoRunToken,
+  workflowId,
+}: ExecutionPanelProps) {
   const { t } = useI18n()
   const [isExecuting, setIsExecuting] = useState(false)
   const [executionLog, setExecutionLog] = useState<ExecutionResult[]>([])
@@ -59,7 +69,7 @@ export function ExecutionPanel({ nodes, edges, onClose, onNodeStatusChange, onNo
       const response = await fetch("/api/execute-workflow", {
         method: "POST",
         headers,
-        body: JSON.stringify({ nodes, edges }),
+        body: JSON.stringify({ nodes, edges, ...(workflowId ? { workflowId } : {}) }),
       })
 
       if (!response.ok) {
