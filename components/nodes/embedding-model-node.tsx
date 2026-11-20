@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/embedding-model-node.tsx
+ * description: 向量化节点组件 · 文本向量化 Embedding
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[embedding]
+ *
+ * brief: 向量化节点组件，支持文本 Embedding 向量化。
+ *
+ * details:
+ * - 通过 embed 调用 OpenAI Embeddings 生成向量
+ * - 支持模型、维度等参数
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: EmbeddingModelNode, EmbeddingModelNodeData
+ * notes: 向量输出供下游检索节点使用
+ */
+
 "use client"
 
 import { memo } from "react"

@@ -1,3 +1,25 @@
+/**
+ * file: components/node-palette.tsx
+ * description: 节点面板组件 · 可拖拽节点列表与图标
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[palette],[node]
+ *
+ * brief: 节点面板组件，提供可拖拽的节点列表与图标供工作流编排。
+ *
+ * details:
+ * - 定义 12 种节点类型的图标与颜色
+ * - 支持拖拽添加到 React Flow 画布
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, lucide-react, @/components/ui/card, @/lib/i18n
+ * exports: NodePalette
+ * notes: 节点定义包含 type、i18nKey、icon、color 字段
+ */
+
 "use client"
 
 import type React from "react"

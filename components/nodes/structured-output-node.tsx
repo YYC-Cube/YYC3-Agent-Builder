@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/structured-output-node.tsx
+ * description: 结构化输出节点组件 · 结构化数据输出与验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[structured-output]
+ *
+ * brief: 结构化输出节点组件，支持结构化数据输出与 Zod 验证。
+ *
+ * details:
+ * - 通过 Output.object/array 定义结构化输出 schema
+ * - 支持 Zod 验证与类型推导
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: StructuredOutputNode, StructuredOutputNodeData
+ * notes: 输出通过 Zod schema 校验
+ */
+
 "use client"
 
 import { memo } from "react"

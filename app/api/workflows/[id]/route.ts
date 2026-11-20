@@ -1,3 +1,26 @@
+/**
+ * file: app/api/workflows/[id]/route.ts
+ * description: 工作流单条 API 路由 · 获取/更新/删除指定工作流
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [api],[workflow],[crud]
+ *
+ * brief: 工作流单条 API 路由，提供获取、更新、删除指定工作流的接口。
+ *
+ * details:
+ * - GET：获取指定 ID 的工作流详情
+ * - PUT/PATCH：更新指定工作流
+ * - DELETE：删除指定工作流
+ * - 所有操作需要登录认证，支持归属隔离
+ *
+ * dependencies: @/lib/api/require-user
+ * exports: GET/PUT/PATCH/DELETE (workflow by id)
+ * notes: 工作流数据与用户归属隔离
+ */
+
 import { requireUser } from "@/lib/api/require-user"
 import { createLogger, getErrorMessage } from "@/lib/logger"
 import { deleteWorkflow, getWorkflow, updateWorkflow } from "@/lib/workflows/repository"

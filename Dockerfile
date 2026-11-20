@@ -1,7 +1,24 @@
 # syntax=docker/dockerfile:1
-# YYC³ Agent Builder — 生产镜像（Next.js standalone）
-# 构建：docker build -t yyc3-agent-builder:0.1.2 .
-# 运行：docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
+# file: Dockerfile
+# description: 生产镜像 · Next.js standalone 输出，非 root 运行 + HEALTHCHECK
+# author: YYC³ Team
+# version: v1.0.0
+# created: 2026-11-01
+# updated: 2026-11-20
+# status: active
+# tags: [deploy],[docker],[image]
+#
+# brief: 生产镜像，使用 Next.js standalone 输出，非 root 用户运行 + HEALTHCHECK。
+#
+# details:
+# - 基础镜像：node:22-alpine
+# - 多阶段构建：base → deps → builder → runner
+# - 非 root 用户运行，遵循容器安全最佳实践
+# - HEALTHCHECK 探测 /api/health 端点
+# - 构建：docker build -t yyc3-agent-builder:0.1.2 .
+# - 运行：docker run -p 3000:3000 --env-file .env.production yyc3-agent-builder:0.1.2
+#
+# notes: standalone 输出适合容器化部署，`next start` 与 Vercel 部署不受影响
 
 FROM node:22-alpine AS base
 RUN corepack enable

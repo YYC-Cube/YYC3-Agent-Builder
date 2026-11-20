@@ -1,12 +1,25 @@
 /**
- * YYC³ · 执行 API 访问控制
- * ================
- * 1) 可选令牌鉴权：设置 WORKFLOW_API_TOKEN 后必须携带 x-workflow-token（或 Authorization: Bearer）。
- * 2) 滑动窗口限流：按客户端 IP 计数，默认 20 次 / 60 秒。
+ * file: api-guard.ts
+ * description: 执行 API 访问控制 · 令牌鉴权与滑动窗口限流
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [security],[api],[auth],[ratelimit]
  *
- * 限流状态由 `lib/rate-limit-store` 提供：单实例默认进程内实现；
- * 配置 UPSTASH_REDIS_REST_URL/TOKEN（或 Vercel KV_*）后自动切换为共享 Redis，
- * 多实例部署无需改动调用方。
+ * brief: 执行 API 的访问控制，支持可选令牌鉴权与按 IP 滑动窗口限流。
+ *
+ * details:
+ * - 可选令牌鉴权：设置 WORKFLOW_API_TOKEN 后必须携带 x-workflow-token 或 Authorization: Bearer
+ * - 滑动窗口限流：按客户端 IP 计数，默认 20 次 / 60 秒
+ * - 限流状态由 rate-limit-store 提供：单实例进程内实现；配置 Upstash/Vercel KV 后自动切换为共享 Redis
+ * - 多实例部署无需改动调用方
+ * - 返回 401（未授权）/ 429（限流，携带 Retry-After）
+ *
+ * dependencies: node:crypto, @/lib/logger, @/lib/rate-limit-store
+ * exports: checkRequest
+ * notes: 限流是防护手段，不应成为全站不可用的单点
  */
 
 import { createHash, timingSafeEqual } from "node:crypto"

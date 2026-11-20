@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/javascript-node.tsx
+ * description: JavaScript 代码节点组件 · 沙箱执行自定义代码
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[javascript]
+ *
+ * brief: JavaScript 代码节点组件，支持在受控沙箱中执行自定义 JavaScript 代码。
+ *
+ * details:
+ * - 通过 safe-executor 在 VM 沙箱中执行代码（默认熔断）
+ * - 支持输入变量 input1..input5/inputs
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: JavaScriptNode, JavaScriptNodeData
+ * notes: 未开启 ENABLE_UNSAFE_CODE_NODES 时明确报错
+ */
+
 "use client"
 
 import { memo } from "react"

@@ -1,3 +1,25 @@
+/**
+ * file: __tests__/api/health.test.ts
+ * description: 健康检查 API 测试 · 服务状态与限流存储类型验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[api],[health]
+ *
+ * brief: 健康检查 API 测试，验证服务状态与非敏感限流存储类型。
+ *
+ * details:
+ * - 验证 GET /api/health 返回 200
+ * - 验证响应头 Cache-Control 为 no-store
+ * - 验证服务状态字段
+ *
+ * dependencies: @/app/api/health/route, @/lib/api-guard, vitest
+ * exports: 测试用例集
+ * notes: 健康检查不返回敏感信息
+ */
+
 import { GET } from "@/app/api/health/route"
 import { resetRateLimitState } from "@/lib/api-guard"
 import { afterEach, describe, expect, it, vi } from "vitest"

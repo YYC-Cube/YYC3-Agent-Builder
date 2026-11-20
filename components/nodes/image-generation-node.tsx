@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/image-generation-node.tsx
+ * description: 图像生成节点组件 · AI 图像生成
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[image-generation]
+ *
+ * brief: 图像生成节点组件，支持 AI 模型图像生成。
+ *
+ * details:
+ * - 通过 generateImage 调用 AI 模型生成图像
+ * - 支持提示词、尺寸、模型等参数
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: ImageGenerationNode
+ * notes: 使用 generateImage 而非 generateText().files
+ */
+
 "use client"
 
 import { memo } from "react"

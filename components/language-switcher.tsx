@@ -1,3 +1,25 @@
+/**
+ * file: components/language-switcher.tsx
+ * description: 语言切换组件 · 10 种语言国际化切换
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[i18n]
+ *
+ * brief: 语言切换组件，提供 10 种语言的国际化切换。
+ *
+ * details:
+ * - 支持 10 种语言切换，含阿拉伯语 RTL
+ * - 使用 i18n useI18n Hook 获取当前语言与可用语言列表
+ * - 客户端组件（use client）
+ *
+ * dependencies: @/lib/i18n, lucide-react, @/components/ui/dropdown-menu, @/components/ui/button, react
+ * exports: LanguageSwitcher
+ * notes: 语言列表由 i18n 配置决定
+ */
+
 "use client"
 
 import { useI18n } from "@/lib/i18n"

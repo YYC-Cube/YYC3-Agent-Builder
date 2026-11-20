@@ -1,3 +1,25 @@
+/**
+ * file: components/node-config-panel.tsx
+ * description: 节点配置面板组件 · 工作流节点参数编辑
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[config],[node]
+ *
+ * brief: 节点配置面板组件，提供工作流节点参数的编辑与配置。
+ *
+ * details:
+ * - 支持 12 种节点类型的参数配置
+ * - 包含输入框、选择器、滑块、文本域等 UI 组件
+ * - 客户端组件（use client）
+ *
+ * dependencies: @/components/ui/*, @/lib/i18n, @xyflow/react, lucide-react, react
+ * exports: NodeConfigPanel
+ * notes: 配置参数与节点类型绑定
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"

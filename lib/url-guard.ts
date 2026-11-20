@@ -1,10 +1,26 @@
 /**
- * YYC³ · 出站 URL 安全网关（SSRF 防护）
- * ================
- * - 仅允许 http/https，拒绝 URL 内嵌凭据
+ * file: url-guard.ts
+ * description: 出站 URL 安全网关 · SSRF 防护与请求加固
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [security],[ssrf],[network],[guard]
+ *
+ * brief: 出站 URL 安全网关，防护 SSRF 攻击并加固 HTTP 请求。
+ *
+ * details:
+ * - 仅允许 http/https 协议，拒绝 URL 内嵌凭据
  * - DNS 解析后逐一校验 IP，覆盖 IPv4 私有/保留段、IPv6 本地/链路本地/映射地址
  * - 禁止重定向跟随（防止 302 绕过），带硬超时与响应体大小上限
- * 残留风险：DNS rebinding（校验与连接之间存在 TOCTOU 窗口），生产环境应配合出口防火墙白名单。
+ * - 覆盖 169.254.0.0/16 云元数据、0.0.0.0/8、IPv6 本地/链路本地/IPv4 映射
+ * - 拒绝十进制与十六进制 IP 变形
+ * - 残留风险：DNS rebinding（TOCTOU 窗口），生产环境应配合出口防火墙白名单
+ *
+ * dependencies: node:dns/promises, node:net
+ * exports: validateUrl, fetchSafe
+ * notes: 生产环境应配合出口防火墙白名单
  */
 
 import { lookup } from "node:dns/promises"

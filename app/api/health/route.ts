@@ -1,15 +1,31 @@
+/**
+ * file: app/api/health/route.ts
+ * description: 容器健康检查端点 · 探测主库与 Redis 连通性
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [api],[health],[observability],[docker]
+ *
+ * brief: 容器编排健康检查端点，探测主库与 Redis 连通性，任何依赖不可用时返回 degraded（503）。
+ *
+ * details:
+ * - 只暴露非敏感运行态信息，不返回环境变量、密钥或依赖内部路径
+ * - 探测主库连通性（SELECT 1），未配置 DATABASE_URL 时视为跳过，不阻断
+ * - 探测 Redis 连通性（PING），不可用时返回 degraded
+ * - 任何依赖不可用时返回 503
+ *
+ * dependencies: @/lib/rate-limit-store, @/lib/db, postgres, ioredis
+ * exports: GET (dynamic)
+ * notes: 生产环境由容器编排调用，无敏感信息泄露
+ */
+
 import { getRateLimitStore } from "@/lib/rate-limit-store"
 import { getDb, isDatabaseConfigured } from "@/lib/db"
 import postgres from "postgres"
 import Redis from "ioredis"
 
-export const dynamic = "force-dynamic"
-
-/**
- * 容器编排健康检查端点。
- * 只暴露非敏感运行态信息，不返回环境变量、密钥或依赖内部路径。
- * 探测主库与 Redis 连通性，任何依赖不可用时返回 degraded（503）。
- */
 export async function GET() {
   const checks: Record<string, { ok: boolean; error?: string }> = {
     service: { ok: true },

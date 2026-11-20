@@ -1,3 +1,27 @@
+/**
+ * file: code-generator.ts
+ * description: AI SDK 代码生成器 · 从工作流图生成可编译的 AI SDK 生产代码
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [util],[codegen],[ai-sdk]
+ *
+ * brief: 从工作流节点图生成可编译的 AI SDK 生产级代码，支持 12 种节点类型。
+ *
+ * details:
+ * - 输入：React Flow 的 nodes/edges 图结构
+ * - 输出：可 tsc 编译的 TypeScript/AI SDK 代码字符串
+ * - 修正 AI SDK 7 API：maxTokens → maxOutputTokens，generateText().files → generateImage
+ * - 条件分支展开目标节点代码，支持 true/false 双路径
+ * - 生成 runAgentWorkflow 函数，包含导入、模型调用、条件分支与结构化输出
+ *
+ * dependencies: @xyflow/react
+ * exports: generateAISDKCode
+ * notes: 生成代码需通过 tsc --noEmit 验证
+ */
+
 import type { Edge, Node as XYNode } from "@xyflow/react"
 
 type CodeGenNode = XYNode<Record<string, any>>

@@ -1,3 +1,25 @@
+/**
+ * file: components/auth-shell.tsx
+ * description: 认证页壳组件 · 登录/注册页面布局壳
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[auth]
+ *
+ * brief: 认证页壳组件，提供登录/注册页面的布局壳，支持桌面端右移与居中两种对齐方式。
+ *
+ * details:
+ * - 登录页在桌面端右移；其他认证页居中
+ * - 包含 BrandLogo 与 ThemeToggle
+ * - 客户端组件（use client）
+ *
+ * dependencies: @/components/brand-logo, @/components/theme-toggle, next/link, react
+ * exports: AuthShell
+ * notes: align 参数支持 "center" | "right"
+ */
+
 import { BrandLogo } from "@/components/brand-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Link from "next/link"

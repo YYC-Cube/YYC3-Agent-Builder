@@ -1,11 +1,26 @@
-# YYC³ Agent Builder — NAS 生产编排（yyc3-45 / Docker V3）
-# 用法：
+# file: deploy/docker-compose.prod.yml
+# description: NAS 生产编排 · app + Redis 健康检查与主库连通性
+# author: YYC³ Team
+# version: v1.0.0
+# created: 2026-11-01
+# updated: 2026-11-20
+# status: active
+# tags: [deploy],[docker],[compose],[production]
+#
+# brief: NAS 生产编排，定义 app 与 Redis 服务，包含主库连通性健康检查。
+#
+# details:
+# - app 仅绑定 Tailscale 地址，公网入口由 ECS yyc3-33 反代，不直接暴露
+# - Redis 与应用同机（V3 NVMe），限流走 REDIS_URL；无需第三方 REST 代理
+# - 数据库：PG15 主备，DATABASE_URL 作为部署占位，真实值仅写入 .env.production
+# - 健康检查探测主库（SELECT 1）与 Redis（PING），不可用返回 503
+# - app 镜像：yyc3-agent-builder:${APP_VERSION:-0.1.2}
+#
+# usage:
 #   cd deploy && cp .env.production.example .env.production && vi .env.production
 #   docker compose -f docker-compose.prod.yml up -d --build
-# 说明：
-#   - app 仅绑定 Tailscale 地址，公网入口由 ECS yyc3-33 反代，不直接暴露
-#   - Redis 与应用同机（V3 NVMe），限流走 REDIS_URL；无需第三方 REST 代理
-#   - 数据库暂未接入代码（阶段 A），DATABASE_URL 先作为部署占位
+#
+# notes: .env.production 不得提交仓库
 
 name: yyc3-agent-builder
 

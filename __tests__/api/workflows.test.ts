@@ -1,3 +1,26 @@
+/**
+ * file: __tests__/api/workflows.test.ts
+ * description: 工作流 CRUD API 测试 · 列表/创建/获取/更新/删除验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[api],[workflow],[crud]
+ *
+ * brief: 工作流 CRUD API 测试，验证工作流列表、创建、获取、更新、删除功能。
+ *
+ * details:
+ * - 验证 GET /api/workflows 列表
+ * - 验证 POST /api/workflows 创建
+ * - 验证 GET/PATCH/DELETE /api/workflows/[id] 单条操作
+ * - 验证 requireUser 鉴权
+ *
+ * dependencies: @/app/api/workflows/route, @/app/api/workflows/[id]/route, @/lib/auth, @/lib/workflows/repository, vitest
+ * exports: 测试用例集
+ * notes: 工作流数据与用户归属隔离
+ */
+
 import { GET as GET_ONE, PATCH, DELETE } from "@/app/api/workflows/[id]/route"
 import { GET, POST } from "@/app/api/workflows/route"
 import { getRequestUser } from "@/lib/auth"

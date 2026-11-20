@@ -1,3 +1,29 @@
+/**
+ * file: app/api/execute-workflow/route.ts
+ * description: 工作流执行 API 路由 · SSE 流式执行引擎接口
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [api],[workflow],[execute],[sse]
+ *
+ * brief: 工作流执行 API 路由，提供 SSE 流式执行引擎接口，支持鉴权、限流与运行落库。
+ *
+ * details:
+ * - 传输层：SSE 流式推送执行状态（node_start/node_complete/node_error）
+ * - 鉴权：WORKFLOW_API_TOKEN 令牌验证（x-workflow-token 或 Authorization: Bearer）
+ * - 限流：按 IP 滑动窗口，默认 20 次/60s，返回 429 携带 Retry-After
+ * - 请求体：512 KB 大小上限，200 节点/500 边图规模上限
+ * - 出站防护：SSRF 网关、10s 硬超时、1 MiB 响应上限
+ * - 运行落库：workflows/runs/run_events 三表持久化
+ * - 超时预算：统一 28s，客户端断开透传 AbortSignal 取消 AI 调用
+ *
+ * dependencies: @/lib/api-guard, @/lib/auth, @/lib/logger, @/lib/runs/repository, @/lib/workflows/repository, @/lib/workflow-engine, @xyflow/react
+ * exports: GET (dynamic), POST (execute-workflow), maxDuration=30
+ * notes: 纯动态 Node 路由，不可部署至 GitHub Pages
+ */
+
 import { checkRequest } from "@/lib/api-guard"
 import { getRequestUser } from "@/lib/auth"
 import { createLogger, getErrorMessage } from "@/lib/logger"

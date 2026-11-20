@@ -1,3 +1,24 @@
+/**
+ * file: components/nodes/end-node.tsx
+ * description: 结束节点组件 · 工作流出口节点
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[end]
+ *
+ * brief: 结束节点组件，作为工作流的出口节点，输出最终结果。
+ *
+ * details:
+ * - 工作流执行的终点
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: EndNode, EndNodeData
+ * notes: 仅有一个输入句柄，无输出句柄
+ */
+
 "use client"
 
 import { Card } from "@/components/ui/card"

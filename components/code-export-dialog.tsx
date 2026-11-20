@@ -1,3 +1,26 @@
+/**
+ * file: components/code-export-dialog.tsx
+ * description: 代码导出对话框 · 从工作流图生成 AI SDK 代码并下载
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[codegen],[dialog]
+ *
+ * brief: 代码导出对话框，从工作流图生成 AI SDK 代码并提供下载。
+ *
+ * details:
+ * - 调用 generateAISDKCode 生成 TypeScript/AI SDK 代码
+ * - 生成 route handler 代码供部署使用
+ * - 支持复制与下载两种操作
+ * - 客户端组件（use client）
+ *
+ * dependencies: @/components/ui/*, @/lib/code-generator, @/lib/i18n, @xyflow/react, lucide-react, react
+ * exports: CodeExportDialog
+ * notes: 导出的代码需通过 tsc --noEmit 验证
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"

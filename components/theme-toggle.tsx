@@ -1,3 +1,25 @@
+/**
+ * file: components/theme-toggle.tsx
+ * description: 主题切换按钮 · 明/暗色模式手动切换
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[theme]
+ *
+ * brief: 主题切换按钮，支持明/暗色模式手动切换，保证 SSR/CSR 首屏一致。
+ *
+ * details:
+ * - 使用 next-themes useTheme 获取与设置主题
+ * - 使用 useSyncExternalStore 避免水合不匹配
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, next-themes, @/components/ui/button, lucide-react
+ * exports: ThemeToggle
+ * notes: useSyncExternalStore 保证 SSR/CSR 首屏一致
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"

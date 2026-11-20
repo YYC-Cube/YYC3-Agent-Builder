@@ -1,3 +1,26 @@
+/**
+ * file: __tests__/api/execute-workflow.test.ts
+ * description: 执行 API 路由测试 · 工作流执行引擎端-to-end 验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[api],[execute-workflow]
+ *
+ * brief: 执行 API 路由测试，验证工作流执行引擎端-to-end 功能。
+ *
+ * details:
+ * - 验证 POST /api/execute-workflow 响应
+ * - 验证 SSE 流式推送状态
+ * - 验证鉴权与限流行为
+ * - 验证运行落库与事件记录
+ *
+ * dependencies: @/app/api/execute-workflow/route, @/lib/api-guard, @/lib/auth, @/lib/runs/repository, @/lib/workflows/repository, vitest
+ * exports: 测试用例集
+ * notes: API 路由测试需模拟 AI SDK 与数据库
+ */
+
 import { POST } from "@/app/api/execute-workflow/route"
 import { resetRateLimitState } from "@/lib/api-guard"
 import { getRequestUser } from "@/lib/auth"

@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/tool-node.tsx
+ * description: 工具节点组件 · 自定义工具调用
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[tool]
+ *
+ * brief: 工具节点组件，支持自定义工具调用。
+ *
+ * details:
+ * - 通过 safe-executor 执行自定义工具代码（默认熔断）
+ * - 支持工具定义与参数配置
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: ToolNode, ToolNodeData
+ * notes: 未开启 ENABLE_UNSAFE_CODE_NODES 时明确报错
+ */
+
 "use client"
 
 import { memo } from "react"

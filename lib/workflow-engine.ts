@@ -1,13 +1,27 @@
 /**
- * YYC³ · 工作流执行引擎
- * ================
- * 从 `app/api/execute-workflow/route.ts` 抽离的纯执行内核：
- * - 输入：节点图（React Flow 的 nodes/edges）
- * - 输出：逐步回调 onUpdate（node_start / node_complete / node_error）
- * - 返回：完整执行日志
+ * file: workflow-engine.ts
+ * description: 工作流执行引擎 · 纯函数式执行内核，支持 12 节点类型与条件分支
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [engine],[workflow],[core],[ai]
  *
- * 传输层（SSE、鉴权、请求体校验）保留在 route handler，本模块不依赖 Next.js。
- * 这样同一内核可被 API、CLI、定时任务或批量执行复用，并可直接单测。
+ * brief: 从 execute-workflow 路由抽离的纯执行内核，不依赖 Next.js，可被 API/CLI/定时任务复用并单测。
+ *
+ * details:
+ * - 输入：React Flow 的 nodes/edges 图结构
+ * - 输出：逐步 onUpdate 回调（node_start/node_complete/node_error）+ 完整执行日志
+ * - 传输层（SSE、鉴权、请求体校验）保留在 route handler
+ * - 支持 12 种节点：start/end/prompt/textModel/conditional/httpRequest/javascript/imageGeneration/audio/embeddingModel/tool/structuredOutput
+ * - 条件节点默认走受限表达式求值器，javascript/tool 节点默认熔断
+ * - 环图防护：深度保护 + visited 集合
+ * - 变量插值：函数式替换，避免 $& / $' 误解析
+ *
+ * dependencies: @ai-sdk/google, @ai-sdk/openai, @xyflow/react, ai, @/lib/logger, @/lib/model-resolver, @/lib/expression-evaluator, @/lib/safe-executor
+ * exports: executeWorkflow, interpolateVariables, StreamUpdate
+ * notes: 纯函数式内核，无 Next.js 依赖，可直接单测
  */
 
 import { google } from "@ai-sdk/google"

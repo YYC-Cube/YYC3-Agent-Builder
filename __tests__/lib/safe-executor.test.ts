@@ -1,3 +1,27 @@
+/**
+ * file: __tests__/lib/safe-executor.test.ts
+ * description: 沙箱执行器测试 · 顶层 return 修复与默认熔断验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[security],[sandbox]
+ *
+ * brief: 沙箱执行器测试，验证顶层 return 修复与默认熔断安全策略。
+ *
+ * details:
+ * - 支持显式 return 语句
+ * - 支持 conditional 引擎拼接的 return 表达式并读取上游输入
+ * - 保留尾表达式完成值（向后兼容）
+ * - 验证危险关键字黑名单拦截
+ * - 验证代码长度上限与执行超时
+ *
+ * dependencies: @/lib/safe-executor, vitest
+ * exports: 测试用例集
+ * notes: 默认安全策略下 javascript 节点明确报错
+ */
+
 import { isCodeExecutionEnabled, safeExecute, validateUserCode } from "@/lib/safe-executor"
 import { afterEach, describe, expect, it } from "vitest"
 

@@ -1,3 +1,26 @@
+/**
+ * file: components/execution-panel.tsx
+ * description: 执行面板组件 · SSE 流式执行状态显示与控制
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[ui],[execution],[sse]
+ *
+ * brief: 执行面板组件，显示 SSE 流式执行状态，支持运行控制与日志查看。
+ *
+ * details:
+ * - 显示节点执行状态（node_start/node_complete/node_error）
+ * - 支持运行/暂停/停止控制
+ * - 显示执行日志与错误信息
+ * - 客户端组件（use client）
+ *
+ * dependencies: @/components/ui/*, @/lib/i18n, @xyflow/react, lucide-react, react
+ * exports: ExecutionPanel
+ * notes: 通过 SSE 连接接收执行状态推送
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"

@@ -1,18 +1,26 @@
 /**
- * YYC³ · 受限条件表达式求值器
- * ================
- * 条件节点默认使用本模块，而不是 `node:vm`。
+ * file: expression-evaluator.ts
+ * description: 受限条件表达式求值器 · 替代 node:vm 的条件节点安全求值
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [util],[security],[expression],[conditional]
  *
- * 仅允许：
- * - 字面量：数字、字符串、true/false/null
- * - 变量：input1..input5、inputs
- * - 成员读取：`input1.country`、`input1["country"]`、`input1[0]`
- * - 白名单方法：includes / startsWith / endsWith / toLowerCase / toUpperCase / trim / slice / split / join / indexOf
- * - 全局函数：Number / String / Boolean / Array.isArray
+ * brief: 条件节点默认使用本模块，提供受限表达式求值，替代不安全的 node:vm 沙箱。
+ *
+ * details:
+ * - 仅允许字面量、input1..input5/inputs 变量、成员/下标读取、白名单方法
+ * - 白名单方法：includes/startsWith/endsWith/toLowerCase/toUpperCase/trim/slice/split/join/indexOf
+ * - 全局函数：Number/String/Boolean/Array.isArray
  * - 运算：! + - * / % > >= < <= === !== == != && || 与三元表达式
+ * - 明确不支持：赋值、函数声明、箭头函数、模板字符串、new/in/instanceof/任意属性访问
+ * - 危险属性（__proto__/constructor/prototype）直接抛错，拒绝构造器链越狱
  *
- * 明确不支持：赋值、函数声明、箭头函数、模板字符串、new、in、instanceof、任意属性访问。
- * 任何未识别语法或危险属性（__proto__ / constructor / prototype）直接抛错。
+ * dependencies: 无外部依赖
+ * exports: evaluateExpression
+ * notes: 任何未识别语法或危险属性直接抛错
  */
 
 const MAX_EXPRESSION_LENGTH = 2000

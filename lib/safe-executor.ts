@@ -1,16 +1,24 @@
 /**
- * YYC³ · 隔离 VM 沙箱执行器（仅显式开启时可用）
- * ================
- * 安全边界说明：Node.js 官方明确声明 `node:vm` 不是安全机制，正则黑名单可被绕过
- * （例如通过内建构造器链取得宿主 process）。因此本模块默认 **禁用**，仅作为
- * 可信内网单租户环境的兼容通道，由 `ENABLE_UNSAFE_CODE_NODES=true` 显式开启。
- * 公网多租户场景必须使用进程级或独立沙箱服务，不得依赖本模块。
+ * file: safe-executor.ts
+ * description: 隔离 VM 沙箱执行器 · 双模式执行与安全熔断
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [util],[security],[sandbox]
  *
- * 双模式执行：
- * 1) 脚本模式 —— 用户代码以尾表达式结尾时，取 Script 完成值（向后兼容）。
- * 2) 函数模式 —— 用户代码含顶层 return（含 conditional 引擎拼接的 `return <expr>`）时，
- *    由 V8 编译期抛出 "Illegal return statement"，自动降级为函数体执行。
- * 其他防护：代码长度上限、V8 同步超时、危险关键字黑名单（仅降低误用风险，不构成边界）。
+ * brief: 在隔离的 VM 沙箱中执行用户代码，默认禁用不可信代码执行，仅在可信内网显式开启。
+ *
+ * details:
+ * - Node.js 官方声明 node:vm 不是安全边界，正则黑名单可被绕过
+ * - 默认禁用：javascript/tool 节点报错，conditional 走受限表达式求值
+ * - 双模式：脚本模式（尾表达式）与函数模式（顶层 return）自动降级
+ * - 其他防护：代码长度上限、V8 同步超时、危险关键字黑名单
+ *
+ * dependencies: node:vm, @/lib/logger
+ * exports: isCodeExecutionEnabled, assertCodeExecutionEnabled, validateUserCode, safeExecute
+ * notes: 公网多租户场景必须使用进程级或独立沙箱服务，不得依赖本模块
  */
 
 import vm from "node:vm"

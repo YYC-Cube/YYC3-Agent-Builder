@@ -2,17 +2,27 @@ import Redis from "ioredis"
 import { createLogger } from "@/lib/logger"
 
 /**
- * 限流存储抽象
- * ----------------
- * 单实例默认使用进程内滑动窗口；配置 Upstash / Vercel KV REST 凭据后
- * 自动切换为 Redis 排序集合滑动窗口，保证多实例共享同一配额。
+ * file: rate-limit-store.ts
+ * description: 限流存储抽象 · 进程内滑动窗口与 Redis 共享配额
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [util],[security],[ratelimit],[redis]
  *
- * 设计取舍：
- * - 窗口内用 ZSET 存请求时间戳，刻度精确到毫秒，避免固定窗口边界双倍突发。
- * - Redis 侧通过单次 EVAL（Lua）完成「清理过期 → 计数 → 判定 → 写入」，
- *   避免多次往返导致的竞态。
- * - 远端存储异常时 **fail-open**（放行并告警）：限流是防护手段，不应成为
- *   全站不可用的单点。对高风险场景可改为 fail-closed（见 RATE_LIMIT_FAIL_MODE）。
+ * brief: 限流存储抽象，单实例进程内滑动窗口，配置 Redis 后自动切换为共享配额。
+ *
+ * details:
+ * - 窗口内用 ZSET 存请求时间戳，刻度精确到毫秒，避免固定窗口边界双倍突发
+ * - Redis 侧通过单次 EVAL（Lua）完成「清理过期 → 计数 → 判定 → 写入」，避免竞态
+ * - 远端存储异常时 fail-open（放行并告警）：限流是防护手段，不应成为全站不可用的单点
+ * - 高风险场景可改为 fail-closed（见 RATE_LIMIT_FAIL_MODE）
+ * - 多实例部署共享同一配额，无需改动调用方
+ *
+ * dependencies: ioredis, @/lib/logger
+ * exports: getRateLimitStore, resetRateLimitStore, RateLimitDecision
+ * notes: 对高风险场景可设为 fail-closed 模式
  */
 
 export type RateLimitDecision = {

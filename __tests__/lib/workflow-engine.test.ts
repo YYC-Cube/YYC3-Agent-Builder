@@ -1,3 +1,26 @@
+/**
+ * file: __tests__/lib/workflow-engine.test.ts
+ * description: 工作流执行引擎测试 · 执行内核与变量插值验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[engine],[workflow]
+ *
+ * brief: 工作流执行引擎测试，验证执行内核与变量插值功能。
+ *
+ * details:
+ * - 验证按依赖顺序执行并回传 node_start/node_complete/日志
+ * - 验证下游节点只收到有效分支的输入
+ * - 验证 maxDepth 可覆盖并拦截环图
+ * - 验证条件节点受限求值与 javascript 节点默认熔断
+ *
+ * dependencies: @/lib/workflow-engine, @xyflow/react, vitest
+ * exports: 测试用例集
+ * notes: 默认安全策略测试会修改 ENABLE_UNSAFE_CODE_NODES 环境变量
+ */
+
 import { executeWorkflow, interpolateVariables, type StreamUpdate } from "@/lib/workflow-engine"
 import type { Edge, Node } from "@xyflow/react"
 import { afterEach, describe, expect, it } from "vitest"

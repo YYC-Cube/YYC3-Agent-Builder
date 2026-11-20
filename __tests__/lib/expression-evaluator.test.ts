@@ -1,3 +1,27 @@
+/**
+ * file: __tests__/lib/expression-evaluator.test.ts
+ * description: 受限表达式求值器测试 · 允许语法与拒绝逃逸验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[security],[expression]
+ *
+ * brief: 受限表达式求值器测试，验证允许语法与拒绝构造器链越狱。
+ *
+ * details:
+ * - 读取 input1..input5 与嵌套属性
+ * - 支持逻辑、比较与三元表达式
+ * - 支持白名单方法（includes/startsWith/endsWith/toLowerCase/toUpperCase/trim/slice/split/join/indexOf/Array.isArray/Number/String/Boolean）
+ * - 拒绝 constructor/__proto__/prototype、全局对象、赋值、模板字符串、多条语句
+ * - 13 个安全用例验证拒绝原生逃逸 payload
+ *
+ * dependencies: @/lib/expression-evaluator, vitest
+ * exports: 测试用例集
+ * notes: 任何危险属性直接抛错
+ */
+
 import { evaluateExpression } from "@/lib/expression-evaluator"
 import { describe, expect, it } from "vitest"
 

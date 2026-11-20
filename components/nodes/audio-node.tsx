@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/audio-node.tsx
+ * description: 音频节点组件 · 语音合成与音频生成
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[audio]
+ *
+ * brief: 音频节点组件，支持语音合成与音频生成。
+ *
+ * details:
+ * - 通过 generateSpeech 调用 OpenAI TTS 生成语音
+ * - 支持文本、语音模型、语速等参数
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: AudioNode, AudioNodeData
+ * notes: 输出音频 URL 供下游节点使用
+ */
+
 "use client"
 
 import { Card } from "@/components/ui/card"

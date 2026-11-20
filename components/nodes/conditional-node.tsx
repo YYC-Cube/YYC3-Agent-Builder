@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/conditional-node.tsx
+ * description: 条件分支节点组件 · TRUE/FALSE 双路径分支
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[conditional]
+ *
+ * brief: 条件分支节点组件，支持表达式求值后 TRUE/FALSE 双路径分支。
+ *
+ * details:
+ * - 条件表达式求值后进入 TRUE/FALSE 分支
+ * - 显示条件表达式与当前状态
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: ConditionalNode, ConditionalNodeData
+ * notes: 条件节点默认走受限表达式求值器
+ */
+
 "use client"
 
 import { memo } from "react"

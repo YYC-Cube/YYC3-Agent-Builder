@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/http-request-node.tsx
+ * description: HTTP 请求节点组件 · 请求外部 API 与变量插值
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[http-request]
+ *
+ * brief: HTTP 请求节点组件，支持请求外部 API 与变量插值。
+ *
+ * details:
+ * - 支持 GET/POST/PUT/DELETE 等 HTTP 方法
+ * - URL 支持变量插值，通过 SSRF 网关安全访问
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: HttpRequestNode, HttpRequestNodeData
+ * notes: 出站 URL 通过 url-guard SSRF 网关防护
+ */
+
 "use client"
 
 import { memo } from "react"

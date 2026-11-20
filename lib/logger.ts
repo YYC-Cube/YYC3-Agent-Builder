@@ -1,8 +1,25 @@
 /**
- * YYC³ · 结构化日志机制
- * ================
- * 统一 JSON Lines 输出，支持分级、请求追踪与敏感字段脱敏。
- * 约定：服务端日志只写 stdout/stderr，由部署平台采集；禁止记录密钥与完整 payload。
+ * file: logger.ts
+ * description: 结构化日志机制 · JSON Lines 分级日志与敏感字段脱敏
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [util],[logging],[observability]
+ *
+ * brief: 统一 JSON Lines 输出，支持分级、请求追踪与敏感字段脱敏。
+ *
+ * details:
+ * - 服务端日志只写 stdout/stderr，由部署平台采集
+ * - 禁止记录密钥与完整 payload
+ * - 支持分级：debug/info/warn/error/silent
+ * - 支持请求追踪（requestId）与敏感字段自动脱敏
+ * - 支持长度/深度截断，防止日志膨胀
+ *
+ * dependencies: 无外部依赖
+ * exports: createLogger, getErrorMessage, LogLevel
+ * notes: 敏感字段包括 authorization/bearer/cookie/token/password/secret 等
  */
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "silent"

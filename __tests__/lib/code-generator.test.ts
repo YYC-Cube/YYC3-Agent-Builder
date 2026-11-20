@@ -1,3 +1,27 @@
+/**
+ * file: __tests__/lib/code-generator.test.ts
+ * description: AI SDK 代码生成器测试 · 生成代码 tsc 可编译验证
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[codegen],[ai-sdk]
+ *
+ * brief: AI SDK 代码生成器测试，验证生成代码的结构与 tsc 可编译性。
+ *
+ * details:
+ * - 验证生成有效 import 语句
+ * - 验证生成 runAgentWorkflow 函数
+ * - 验证 start/prompt/conditional/httpRequest/javascript 节点处理
+ * - 验证空节点与空边的兜底处理
+ * - 新增生成物 tsc 可编译测试
+ *
+ * dependencies: @/lib/code-generator, @xyflow/react, vitest
+ * exports: 测试用例集
+ * notes: 生成代码需通过 tsc --noEmit 验证
+ */
+
 import { generateAISDKCode } from "@/lib/code-generator"
 import type { Edge, Node as XYNode } from "@xyflow/react"
 import { describe, expect, it } from "vitest"

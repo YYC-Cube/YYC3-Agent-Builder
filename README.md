@@ -1,3 +1,19 @@
+---
+file: README.md
+title: YYC³ Agent Builder — Visual AI Workflow Builder
+description: YYC³ Agent Builder 项目主文档 — 可视化 AI 工作流编排平台
+author: YYC³ Team <admin@0379.email>
+version: v1.1.0
+created: 2026-11-01
+updated: 2026-11-20
+status: stable
+tags: [readme, project, overview, documentation]
+category: general
+language: zh-CN
+audience: developers,managers,stakeholders
+complexity: basic
+---
+
 # YYC³ Agent Builder — Visual AI Workflow Builder
 
 **CloudPivot Intelli-Matrix** · 言启千行代码，语枢万物智能

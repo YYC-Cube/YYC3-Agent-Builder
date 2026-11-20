@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/prompt-node.tsx
+ * description: 提示词节点组件 · 支持变量插值的文本生成
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[prompt]
+ *
+ * brief: 提示词节点组件，支持 $input1..$input5 变量插值的文本生成。
+ *
+ * details:
+ * - 提示词模板支持 $input1..$input5 变量插值
+ * - 使用 interpolateVariables 进行安全替换
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: PromptNode, PromptNodeData
+ * notes: 变量插值避免 $& / $' 误解析
+ */
+
 "use client"
 
 import { Card } from "@/components/ui/card"

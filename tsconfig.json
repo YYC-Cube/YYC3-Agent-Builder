@@ -1,3 +1,23 @@
+// file: tsconfig.json
+// description: TypeScript 配置 · strict 严格模式与项目编译选项
+// author: YYC³ Team
+// version: v1.0.0
+// created: 2026-11-01
+// updated: 2026-11-20
+// status: active
+// tags: [config],[typescript]
+//
+// brief: TypeScript 配置，启用 strict 严格模式与项目编译选项。
+//
+// details:
+// - strict: true（严格类型检查）
+// - noEmit: true（仅类型检查，不生成输出）
+// - module: esnext，moduleResolution: bundler
+// - skipLibCheck: true（跳过声明文件检查）
+// - allowJs: true（允许 JavaScript 文件）
+//
+// dependencies: 无外部依赖
+// notes: 通过 `tsc --noEmit` 验证，要求 0 错误
 {
   "compilerOptions": {
     "lib": [

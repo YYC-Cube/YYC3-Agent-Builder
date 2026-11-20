@@ -1,3 +1,24 @@
+/**
+ * file: components/nodes/start-node.tsx
+ * description: 开始节点组件 · 工作流入口节点
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[start]
+ *
+ * brief: 开始节点组件，作为工作流的入口节点，提供初始输入。
+ *
+ * details:
+ * - 工作流执行的起点
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: StartNode, StartNodeData
+ * notes: 仅有一个输出句柄，无输入句柄
+ */
+
 "use client"
 
 import { Card } from "@/components/ui/card"

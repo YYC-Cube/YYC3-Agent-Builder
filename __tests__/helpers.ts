@@ -1,3 +1,24 @@
+/**
+ * file: __tests__/helpers.ts
+ * description: 测试辅助工具 · 模拟翻译与通用测试辅助
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [test],[helpers],[vitest]
+ *
+ * brief: 测试辅助工具，提供模拟翻译与通用测试辅助函数。
+ *
+ * details:
+ * - 提供 mockTranslations 记录，用于 i18n 组件测试
+ * - 客户端组件渲染辅助
+ *
+ * dependencies: @testing-library/jest-dom/vitest, vitest
+ * exports: mockTranslations
+ * notes: 仅在测试环境中使用
+ */
+
 import "@testing-library/jest-dom/vitest"
 import { vi } from "vitest"
 

@@ -1,3 +1,25 @@
+/**
+ * file: components/nodes/text-model-node.tsx
+ * description: 文本模型节点组件 · LLM 文本生成
+ * author: YYC³ Team
+ * version: v1.0.0
+ * created: 2026-11-01
+ * updated: 2026-11-20
+ * status: active
+ * tags: [component],[node],[text-model],[llm]
+ *
+ * brief: 文本模型节点组件，支持多 provider LLM 文本生成。
+ *
+ * details:
+ * - 支持 OpenAI/Google/Anthropic 等多 provider
+ * - 支持模型、temperature、maxOutputTokens 等参数
+ * - 客户端组件（use client）
+ *
+ * dependencies: react, @xyflow/react, lucide-react, @/components/ui/card, @/lib/i18n, @/lib/node-utils
+ * exports: TextModelNode, TextModelNodeData
+ * notes: AI SDK 7 使用 maxOutputTokens（非 maxTokens）
+ */
+
 "use client"
 
 import { memo } from "react"
