@@ -87,7 +87,7 @@
     "@radix-ui/react-tooltip": "1.1.6",
     "@vercel/analytics": "2.0.1",
     "@xyflow/react": "12.12.0",
-    "@yyc3/i18n-core": "^2.4.0",
+    "@yyc3/i18n-core": "^3.6.0",
     "ai": "7.0.142",
     "better-auth": "^1.7.20",
     "class-variance-authority": "^0.7.1",
